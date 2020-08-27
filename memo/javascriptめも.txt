@@ -1,0 +1,15 @@
+○ フォームへのバリデーション表示
+/admin/
+  /staff, product, member/
+    create
+    edit
+  /order/
+/shop/
+  login
+  /user_menu/
+    signup
+    edit
+  /order/
+    order
+○ 注文フォームで、会員登録する場合以外パスワード以降disabled
+○ 商品紹介文、レビュー本文の記入欄は、maxlengthではなくjavascriptで数える

@@ -1,0 +1,117 @@
+@charset "UTF-8";
+
+html {
+  font-size: 62.5%;
+}
+body {
+  font-size: 1.6rem;
+}
+
+div {
+  margin: 15px 0;
+}
+
+h1, h2, h3, h4 {
+  margin: 10px 5px;
+}
+h1 {
+  font-size: 2.4rem;
+}
+h2 {
+  font-size: 2rem;
+}
+h3 {
+  font-size: 1.8rem;
+}
+h4 {
+  font-size: 1.6rem;
+}
+
+p {
+  margin: 4px 0;
+}
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+table {
+  border-collapse: collapse;
+}
+table, td {
+  border: solid 1px #cccccc;
+}
+td {
+  padding: 4px 6px;
+}
+
+/* ----- form ----- */
+.announce {
+  color: #606060;
+  font-size: 11px;
+}
+.danger {
+  color: #c00000;
+  font-size: 14px;
+}
+
+.short-input {
+  width: 5em;
+}
+.middle-input {
+  width: 20em;
+}
+textarea {
+  resize: none;
+}
+input[type="number"] {
+  width: 3em;
+}
+
+/* ----- pict ----- */
+.pict-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 150px;
+}
+.view-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 500px;
+  height: 500px;
+}
+
+/* ----- header footer ----- */
+.global-nav ul {
+  margin: 0;
+  padding-left: 40px;
+  list-style-type: ' - ';
+}
+
+/* ====== admin ====== */
+/* ----- order ----- */
+.admin-order-nav ul {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.admin-order-nav li {
+  padding-right: 8px;
+}
+/* ====== shop ====== */
+/* ----- review ----- */
+.review-input textarea {
+  width: 30em;
+  height: 10em;
+}
+.review-body {
+  margin: 4px;
+  padding: 8px;
+  border: dashed 1px #606060;
+  width: 300px;
+  min-height: 1em;
+}

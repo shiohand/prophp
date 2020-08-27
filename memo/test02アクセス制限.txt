@@ -1,0 +1,103 @@
+2. ログイン状態によるアクセス制限
+   login : ログインのみ ログアウト中はno_login.phpへ
+   all   : 制限なし
+   guest : ログアウトのみ ログイン中はalready_login.phpへ
+   // ログイン状態以外によるアクセス制限(カートの中身の有無)はtest03へ
+
+   no_loginとalready_loginで無限ループしないように(そうなる可能性があるかは分からないが)、no_loginにlogoutのみの制限はつけない
+
+/admin/
+guest  login
+guest  login_check
+all    logout
+all    no_login
+login  already_login
+
+login  top
+        /staff/
+login    top
+login    view
+login    create
+login    create_check
+login    create_do
+login    edit
+login    edit_check
+login    edit_do
+login    delete
+login    delete_do
+login    done
+       /product/
+login    top
+login    view
+login    create
+login    create_check
+login    create_do
+login    edit
+login    edit_check
+login    edit_do
+login    delete
+login    delete_do
+login    done
+       /member/
+login    top
+login    view
+login    create
+login    create_check
+login    create_do
+login    edit
+login    edit_check
+login    edit_do
+login    delete
+login    delete_do
+login    done
+       /order/
+login    top
+login    sales_data
+login    order
+login    sales
+login    product_sales
+login    oen_product_sales
+login    download_csv
+
+/shop/
+guest  login
+guest  login_check
+all    logout
+all    no_login
+login  already_login
+
+all    top
+all    ranking
+all    product
+all    view
+all    cartin
+all    cart
+all    clear_cart
+
+  /user_menu/
+login  view
+login  ordered
+login  reviewed
+login  review_check
+login  review_do
+guest  signup
+guest  sigunup_check
+guest  signup_do
+login  edit
+login  edit_check
+login  edit_do
+login  delete
+login  delete_do
+all    done
+  /order/
+all    order
+all    order_check
+login  order_member
+all    order_do
+all    order_done
+
+/component/
+  header_admin
+  footer_admin
+  header_shop
+  footer_shop

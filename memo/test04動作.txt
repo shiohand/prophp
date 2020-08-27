@@ -1,0 +1,97 @@
+.
+
+/admin/
+  login
+  login_check
+  logout
+  no_login
+  already_login
+
+  top
+  /staff/
+    top
+    view
+    create
+    create_check
+    create_do
+    edit
+    edit_check
+    edit_do
+    delete
+    delete_do
+    done
+  /product/
+    top
+    view
+    create
+    create_check
+    create_do
+    edit
+    edit_check
+    edit_do
+    delete
+    delete_do
+    done
+  /member/
+    top
+    view
+    create
+    create_check
+    create_do
+    edit
+    edit_check
+    edit_do
+    delete
+    delete_do
+    done
+  /order/
+    top
+    sales_data
+    order
+    sales
+    product_sales
+    oen_product_sales
+    download_csv
+
+/shop/
+  login
+  login_check
+  logout
+  no_login
+  already_login
+
+  top
+  ranking
+  product
+  view
+  cartin
+  cart
+  clear_cart
+
+  /user_menu/
+    view
+    ordered
+    reviewed
+    review_check
+    review_do
+    signup
+    sigunup_check
+    signup_do
+    edit
+    edit_check
+    edit_do
+    delete
+    delete_do
+    done
+  /order/
+    order
+    order_check
+    order_member
+    order_do
+    order_done
+
+/component/
+  header_admin
+  footer_admin
+  header_shop
+  footer_shop
