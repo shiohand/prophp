@@ -190,7 +190,7 @@
   </table>
 
   <p>こちらの内容でお間違いありませんか？</p>
-  <button type="button" onclick="location.href='<?php echo S_NAME ?>shop/cart.php'">カートへ戻る</button>
+  <button type="button" onclick="history.back()">戻る</button>
   <!-- submit可能時 -->
   <?php if($submit_check): ?>
     <input type="submit" value="注文を確定する">
