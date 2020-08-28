@@ -1,0 +1,238 @@
+3.動作のチェック(正常系)
+  入力フォームの動作、タイプの確認
+  GETリクエストの動作
+  POSTリクエストの動作
+
+  a 動作: 操作手順
+  -b 期待される結果
+
+  ・フォーム
+  f 項目:タイプ(他 制限)
+    ・タイプの確認方法
+    text     文字入力ができる
+    password 入力した文字が伏せ字になる
+    ・制限の確認方法
+    maxlength 半角のみ、全角のみ、スペースのみで最大文字数を超える入力を試みる
+
+  p submitボタン action先と動作を確認
+  g クエリパラメータ付きのリンク 遷移後のURLと動作を確認
+  
+  ・データベース
+  db 取得データの内容や順番が正しいか確認
+  c 項目: 表示されるべきカラム
+  
+  // behavior form
+  // mst_staff as staff, mst_product as product, dat_member as member, dat_review as review, dat_sales as sales, dat_sales_product as sales_product
+
+/admin/
+
+  login
+    f スタッフID:text
+      パスワード:password
+    p ログイン:submit,login_check.php
+
+    a ログイン : スタッフID[1] パスワード[1] を入力し、ログインボタンを押す
+    -b ログインに成功 トップページ(admin/top.php)へ遷移 ヘッダーにstaff1さんログイン中と表示される
+
+  login_check 無し
+
+  logout
+    a ログアウト : ログインしている状態でlogoutページへアクセスし、ログアウト完了の下のログインをクリックする
+    -b logoutページではログアウト完了と表示され、ログインをクリックしたらloginページが表示される
+
+  no_login 無し
+  already_login 無し
+  top 無し
+
+  /staff/
+
+    top
+      db スタッフID ASC
+      c スタッフID: staff.id
+        スタッフ名: staff.id
+
+    view
+        c スタッフID: staff.id
+          スタッフ名: staff.id
+
+    create
+      f スタッフ名:text(maxlength=15)
+        パスワード:password
+        パスワード再入力:password
+
+    create_check
+
+    create_do
+
+    edit
+      c スタッフID: staff.id
+      f スタッフ名:text(maxlength=15)
+        パスワード:password
+        新しいパスワード:password
+        新しいパスワード再入力:password
+
+    edit_check
+
+    edit_do
+
+    delete
+
+    delete_do
+
+    done
+
+  /product/
+
+    top
+      db 商品ID ASC
+        商品ID: product.id
+        商品名: product.name
+        価格: product.price
+
+    view
+
+    create
+
+    create_check
+
+    create_do
+
+    edit
+
+    edit_check
+
+    edit_do
+
+    delete
+
+    delete_do
+
+    done
+
+  /member/
+
+    top
+      db 会員ID ASC
+        会員ID: member.id
+        メールアドレス: member.email
+        お名前: member.name
+        性別: member.gender(1(男性), 2(女性))
+        年代: member.birth(Y)
+
+    view
+
+    create
+
+    create_check
+
+    create_do
+
+    edit
+
+    edit_check
+
+    edit_do
+
+    delete
+
+    delete_do
+
+    done
+
+  /order/
+
+    top
+
+    sales_data
+
+    order
+
+    sales
+
+    product_sales
+
+    oen_product_sales
+
+    download_csv
+
+
+/shop/
+
+  login
+
+  login_check
+
+  logout
+
+  no_login
+
+  already_login
+
+
+  top
+
+  ranking
+
+  product
+
+  view
+
+  cartin
+
+  cart
+
+  clear_cart
+
+
+  /user_menu/
+
+    view
+
+    ordered
+
+    reviewed
+
+    review_check
+
+    review_do
+
+    signup
+
+    sigunup_check
+
+    signup_do
+
+    edit
+
+    edit_check
+
+    edit_do
+
+    delete
+
+    delete_do
+
+    done
+
+  /order/
+
+    order
+
+    order_check
+
+    order_member
+
+    order_do
+
+    order_done
+
+
+/component/
+
+  header_admin
+
+  footer_admin
+
+  header_shop
+
+  footer_shop

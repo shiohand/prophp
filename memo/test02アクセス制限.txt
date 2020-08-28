@@ -1,10 +1,9 @@
-2. ログイン状態によるアクセス制限
-   login : ログインのみ ログアウト中はno_login.phpへ
-   all   : 制限なし
-   guest : ログアウトのみ ログイン中はalready_login.phpへ
-   // ログイン状態以外によるアクセス制限(カートの中身の有無)はtest03へ
-
-   no_loginとalready_loginで無限ループしないように(そうなる可能性があるかは分からないが)、no_loginにlogoutのみの制限はつけない
+2.ログイン状態によるアクセス制限
+  login : ログインのみ ログアウト中はno_login.phpへ
+  all   : 制限なし
+  guest : ログアウトのみ ログイン中はalready_login.phpへ
+  // ログイン状態以外によるアクセス制限(カートの中身の有無)はtest03へ
+  // no_loginとalready_loginで無限ループしないように(そうなる可能性があるかは分からないが)、no_loginにlogoutのみの制限はつけない
 
 /admin/
 guest  login
@@ -95,9 +94,3 @@ all    order_check
 login  order_member
 all    order_do
 all    order_done
-
-/component/
-  header_admin
-  footer_admin
-  header_shop
-  footer_shop
