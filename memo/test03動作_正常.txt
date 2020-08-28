@@ -7,12 +7,16 @@
   -b 期待される結果
 
   ・フォーム
-  f 項目:タイプ(他 制限)
+  i 項目:タイプ(他 制限)
     ・タイプの確認方法
     text     文字入力ができる
     password 入力した文字が伏せ字になる
+    email    @を含まない文字列を入力してsubmitを押すと警告が表示されてsubmitされない
+    textarea 入力中に改行ができる
     ・制限の確認方法
-    maxlength 半角のみ、全角のみ、スペースのみで最大文字数を超える入力を試みる
+    maxlength 半角のみ、全角のみ、スペースのみで最大文字数を超える入力ができない
+    max_file_size 制限から外れた容量のデータを送信しようとしても反映されない
+    accept=image/* txtファイルなど画像ファイル以外を送信しようとしても反映されない
 
   p submitボタン action先と動作を確認
   g クエリパラメータ付きのリンク 遷移後のURLと動作を確認
@@ -27,7 +31,7 @@
 /admin/
 
   login
-    f スタッフID:text
+    i スタッフID:text
       パスワード:password
     p ログイン:submit,login_check.php
 
@@ -48,38 +52,44 @@
 
     top
       db スタッフID ASC
-      c スタッフID: staff.id
-        スタッフ名: staff.id
+        c スタッフID: staff.id
+          スタッフ名: staff.id
 
     view
         c スタッフID: staff.id
           スタッフ名: staff.id
 
     create
-      f スタッフ名:text(maxlength=15)
+      i スタッフ名:text(maxlength=15)
         パスワード:password
         パスワード再入力:password
+      p 確認:submit,create_check.php
 
     create_check
+      p 追加:submit,create_do.php
 
-    create_do
+    create_do 無し
 
     edit
       c スタッフID: staff.id
-      f スタッフ名:text(maxlength=15)
+      i スタッフ名:text(maxlength=15)(val staff.name)
         パスワード:password
         新しいパスワード:password
         新しいパスワード再入力:password
+      p 確認:submit,edit_check.php
 
     edit_check
+      p 確定:submit,edit_do.php
 
-    edit_do
+    edit_do 無し
 
     delete
+      c スタッフID: staff.id
+        スタッフ名: staff.id
+      p 削除:submit,delete_do.php
 
-    delete_do
-
-    done
+    delete_do 無し
+    done 無し
 
   /product/
 
@@ -87,27 +97,54 @@
       db 商品ID ASC
         商品ID: product.id
         商品名: product.name
-        価格: product.price
+        価格: product.price(桁区切り)円
 
     view
+      c 商品ID: product.id
+        商品名: product.name
+        価格: product.price(桁区切り)円
+        発売日: product.release_date(Y-m-d)
+        紹介文: product.content(改行反映)
+        画像: product.pict
 
     create
+      i 商品名:text(maxlength=30)
+        価格:text
+        発売日:text
+        紹介文:textarea(maxlength=1000)
+        画像:file(max_file_size=1048576(1M))(accept=image/*)
+      p 確認:submit,create_check.php
 
     create_check
+      p 追加:submit,create_do.php
 
-    create_do
+    create_do 無し
 
     edit
+      i 商品名:text(maxlength=30)(val product.name)
+        価格:text(valproduct. price(桁区切り)円)
+        発売日:text(val product.release_date(Y-m-d))
+        紹介文:textarea(maxlength=1000)(val product.content(改行反映))
+      c 画像: product.pict
+      i 画像:file(max_file_size=1048576(1M))(accept=image/*)
+      p 確認:submit,edit_check.php
 
     edit_check
+      p 確定:submit,edit_do.php
 
-    edit_do
+    edit_do 無し
 
     delete
+      c 商品ID: product.id
+        商品名: product.name
+        価格: product.price(桁区切り)円
+        発売日: product.release_date(Y-m-d)
+        紹介文: product.content(改行反映)
+        画像: product.pict
+      p 削除:submit,delete_do.php
 
-    delete_do
-
-    done
+    delete_do 無し
+    done 無し
 
   /member/
 
@@ -120,32 +157,95 @@
         年代: member.birth(Y)
 
     view
+      c 会員ID: member.id
+        メールアドレス: member.email
+        お名前: member.name
+        郵便番号: member.postal1(-)member.postal2
+        住所: member.address
+        電話番号: member.tel
+        性別: member.gender(1(男性), 2(女性))
+        年代: member.birth(Y年代)
 
     create
+      i メールアドレス:email(maxlength=50)
+        パスワード:password
+        パスワード再入力:password
+        お名前:text(maxlength=15)
+        郵便番号1:text(maxlength=3)
+        郵便番号2:text(maxlength=4)
+        住所:text(maxlength=50)
+        電話番号:text
+        性別:radio
+        年代:select
+      p 確認:submit,create_check.php
 
     create_check
+      p 追加:submit,create_do.php
 
-    create_do
+    create_do 無し
 
     edit
+      c 会員ID: member.id
+      i メールアドレス:email(maxlength=50)(val member.email)
+        パスワード:password
+        パスワード再入力:password
+        お名前:text(maxlength=15)(val member.name)
+        郵便番号1:text(maxlength=3)(val member.postal1)
+        郵便番号2:text(maxlength=4)(val member.postal2)
+        住所:text(maxlength=50)(val member.address)
+        電話番号:text(val member.tel)
+        性別:radio(val member.gender(1(男性), 2(女性)))
+        年代:select(val member.birth(Y年代))
+      p 確認:submit,edit_check.php
 
     edit_check
+      p 確定:submit,edit_do.php
 
-    edit_do
+    edit_do 無し
 
     delete
+      c 会員ID: member.id
+        メールアドレス: member.email
+        お名前: member.name
+        郵便番号: member.postal1(-)member.postal2
+        住所: member.address
+        電話番号: member.tel
+        性別: member.gender(1(男性), 2(女性))
+        年代: member.birth(Y年代)
+      p 削除:submit,delete_do.php
 
-    delete_do
-
-    done
+    delete_do 無し
+    done 無し
 
   /order/
 
     top
+      i 注文ID:text
+      p 注文詳細表示:submit,sale_data.php
 
     sales_data
+      i 注文ID:text
+      p 注文詳細表示:submit,sale_data.php
+      c 注文ID: sales_data.id
+        会員ID: sales_data.member_id
+        注文日時: sales_data.created_at(Y/m/d H:i:s)
+      db 商品ID ASC
+        c 商品ID: dat_sales_product.product_id
+          商品名: mst_product.name
+          価格(円): dat_sales_product.price(桁区切り)
+          数量(個): dat_sales_product.quantity
+          小計(円): (dat_sales_product.price * quantity)(桁区切り)
+      c 合計金額: SUM(price * quantity)
 
     order
+      g 累計 24時間 週間 月間 年間
+      i 期間指定(左):date
+        期間指定(右):date
+        会員ID:text
+        商品ID:text
+      p 絞り込み:submit,クエリパラメータを保持した現在のURL
+        クリア:submit,クエリパラメータを保持した現在のURL
+      p CSVダウンロード:submit,download_csv.php
 
     sales
 

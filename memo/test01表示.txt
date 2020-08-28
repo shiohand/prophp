@@ -142,7 +142,7 @@
 
     view
       t 商品参照 / 商品参照 - admin
-      l ショップの商品ページを確認(shop/view.php?id={id})
+      l ショップの商品ページを確認(shop/view.php?id={id})(target="blank")
       th: e 商品ID 商品名 価格 発売日 紹介文 画像
       td: e {商品ID}
             {商品名}

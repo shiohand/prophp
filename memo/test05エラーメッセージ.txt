@@ -202,3 +202,4 @@
   footer_admin
   header_shop
   footer_shop
+© 202
