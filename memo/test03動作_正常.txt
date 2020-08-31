@@ -13,13 +13,15 @@
     password 入力した文字が伏せ字になる
     email    @を含まない文字列を入力してsubmitを押すと警告が表示されてsubmitされない
     textarea 入力中に改行ができる
+    number   カウントアップ・カウントダウンのボタンで数量を変更できる
     ・制限の確認方法
-    maxlength 半角のみ、全角のみ、スペースのみで最大文字数を超える入力ができない
-    max_file_size 制限から外れた容量のデータを送信しようとしても反映されない
+    maxlength      半角のみ、全角のみ、スペースのみで最大文字数を超える入力ができない
+    min(number)    フォームのカウントダウンボタンを押しても設定した値を下回れない
+    max_file_size  制限から外れた容量のデータを送信しようとしても反映されない
     accept=image/* txtファイルなど画像ファイル以外を送信しようとしても反映されない
 
-  p submitボタン action先と動作を確認
-  g クエリパラメータ付きのリンク 遷移後のURLと動作を確認
+  p 項目:submit,action action先と動作を確認
+  g 項目:key,value クエリパラメータ付きのリンク 遷移後のURLと動作を確認
   
   ・データベース
   db 取得データの内容や順番が正しいか確認
@@ -226,96 +228,322 @@
     sales_data
       i 注文ID:text
       p 注文詳細表示:submit,sale_data.php
-      c 注文ID: sales_data.id
-        会員ID: sales_data.member_id
-        注文日時: sales_data.created_at(Y/m/d H:i:s)
+      c 注文ID: sales.id
+        会員ID: sales.member_id
+        注文日時: sales.created_at(Y/m/d H:i:s)
       db 商品ID ASC
-        c 商品ID: dat_sales_product.product_id
-          商品名: mst_product.name
-          価格(円): dat_sales_product.price(桁区切り)
-          数量(個): dat_sales_product.quantity
-          小計(円): (dat_sales_product.price * quantity)(桁区切り)
-      c 合計金額: SUM(price * quantity)
+        c 商品ID: sales_product.product_id
+          商品名: product.name
+          価格(円): sales_product.price(桁区切り)
+          数量(個): sales_product.quantity
+          小計(円): (sales_product.price * quantity)(桁区切り)
+      c 合計金額: SUM(price * quantity)円(桁区切り)
 
     order
-      g 累計 24時間 週間 月間 年間
+      l リセット
+      g 累計:term,all
+        24時間:term,day
+        週間:term,week
+        月間:term,month
+        年間:term,year
       i 期間指定(左):date
         期間指定(右):date
         会員ID:text
         商品ID:text
       p 絞り込み:submit,クエリパラメータを保持した現在のURL
         クリア:submit,クエリパラメータを保持した現在のURL
+      g pager 表上 表下
+      g 注文ID △▽:sort,sid/rsid
+        会員ID △▽:sort,mid/rmid
+        金額 △▽:sort,pri/rpri
+        注文日時 △▽:sort,at/rat
+      db 注文ID ASC
+        c 注文ID: sales.id
+          会員ID: sales.member_id
+          メールアドレス: sales.email
+          会員名: sales.name
+          金額: SUM(sales_product.price * quantity)(桁区切り)
+          注文日時: sales.created_at(Y-m-d H:i:s)
       p CSVダウンロード:submit,download_csv.php
 
     sales
+      l リセット
+      g 日別:interv,day
+        月別:interv,month
+        年別:interv,year
+      i 期間指定(左):date
+        期間指定(右):date
+      p 絞り込み:submit,クエリパラメータを保持した現在のURL
+        クリア:submit,クエリパラメータを保持した現在のURL
+      g pager 表上 表下
+      g 期間 △▽:sort,at/rat
+        売上金額(円) △▽:sort,pri/rpri
+      db 期間 DESC
+        c 期間: sales_product.created_at(intervが day:Y-m-d month:Y-m year:Y)
+          売上金額(円): SUM(sales_product.price * quantity)(桁区切り)
+      p CSVダウンロード:submit,download_csv.php
 
     product_sales
+      l リセット
+      g 累計:term,all
+        24時間:term,day
+        週間:term,week
+        月間:term,month
+        年間:term,year
+      i 期間指定(左):date
+        期間指定(右):date
+        商品ID(カンマ区切りで複数選択):text
+      p 絞り込み:submit,クエリパラメータを保持した現在のURL
+        クリア:submit,クエリパラメータを保持した現在のURL
+      g pager 表上 表下
+      g 商品ID △▽:sort,pid/rpid
+        売上個数(個) △▽:sort,q/rq
+        売上金額(円) △▽:sort,pri/rpri
+        平均単価(円) △▽:sort,uni/runi
+      db 売上金額(円) DESC
+        c 商品ID: sales_product.product_id
+          商品名: product.nmae
+          売上個数(個): SUM(quantity)
+          売上金額(円): SUM(sales_product.price * quantity)(桁区切り)
+          平均単価(円): 売上金額(円)/売上個数(個)(桁区切り)
+      p CSVダウンロード:submit,download_csv.php
 
-    oen_product_sales
+    one_product_sales
+      l リセット
+      g 日別:interv,day
+        月別:interv,month
+        年別:interv,year
+      i 期間指定(左):date
+        期間指定(右):date
+        商品ID:text
+      p 絞り込み:submit,クエリパラメータを保持した現在のURL
+        クリア:submit,クエリパラメータを保持した現在のURL
+      g pager 表上 表下
+      g 期間 △▽:sort,at/rat
+        売上金額(円) △▽:sort,pri/rpri
+      db 期間 DESC
+        c 期間: sales_product.created_at(intervが day:Y-m-d month:Y-m year:Y)
+          売上金額(円): SUM(sales_product.price * quantity)(桁区切り)
+      p CSVダウンロード:submit,download_csv.php
 
     download_csv
+        ダウンロード
 
 
 /shop/
-
   login
+    i メールアドレス:email
+      パスワード:password
+    p ログイン:submit,login_check.php
 
-  login_check
+    a ログイン : メールアドレス[a@gmail.com] パスワード[a] を入力し、ログインボタンを押す
+    -b ログインに成功 トップページ(shop/top.php)へ遷移 ヘッダーにmemberA様ログイン中と表示される
+
+  login_check 無し
 
   logout
+    a ログアウト : ログインしている状態でlogoutページへアクセスし、ログアウト完了の下のログインをクリックする
+    -b logoutページではログアウト完了と表示され、ログインをクリックしたらloginページが表示される
 
-  no_login
-
-  already_login
-
+  no_login 無し
+  already_login 無し
 
   top
+    (ランキング)
+      db 売上(一か月) DESC,商品ID ASC
+        * 順位(ただのカウント)
+        c 商品画像: product.pict
+          商品名: product.name
+          価格: product.price円(桁区切り)
+    (新着商品)(release_date <= 現在時刻)
+      db 発売日 DESC
+        c 商品画像: product.pict
+          商品名: product.name
+          価格: product.price円(桁区切り)
+    (発売予定)(現在時刻 < release_date)
+      db 発売日 ASC
+        c 商品画像: product.pict
+          商品名: product.name
+          発売日: product.release_date(Y年m月d日)
 
   ranking
+    g 累計:term,all
+      24時間:term,day
+      週間:term,week
+      月間:term,month
+      年間:term,year
+    db 売上(累計),商品ID ASC
+      * 順位(ただのカウント)
+      c 商品画像: product.pict
+        商品名: product.name
+        価格: product.price
 
   product
+    g 発売日の近い順:sort,rat
+      価格の安い順:sort,pri
+      価格の高い順:sort,rpri
+      評価の高い順:sort,rev
+    g pager 表上 表下
+    db 発売日 DESC,商品ID DESC
+      c 商品画像: product.pict
+        商品名: product.name
+        価格: product.price円(桁区切り)
+        発売日: product.release_date(Y年m月d日)
+        評価平均: AVG(review.rating)(少数第一位まで)
 
   view
+    c 商品画像: product.pict
+      商品名: product.name
+      価格: product.price円(桁区切り)
+      発売日: product.release_date(Y年m月d日)
+      紹介文: product.content(改行反映)
+    
+    - 発売済みの商品
+      i 数量選択:number(min 1)(val 1)
+      p カートに入れる:submit,cartin.php
+    - 未発売の商品
+      c 発売日: product.release_date(Y年m月d日) 発売予定
+    - ログイン時
+      - レビュー未投稿
+        i レビューを書く:ta(maxlength=1000)
+           評価(★1～5):radio(val 3)
+        p 確認:submit,user_menu/review_check.php
+    - データ有り
+      db 投稿日 DESC
+        c 商品名: product.name
+          評価: review.rating
+          本文: review.body
+          投稿日: review.created_at
+
 
   cartin
+    g 商品名:view.php?id=$post_product_id
+    * 数量:$post['quantity']
+    c 画像:product.pict
+    (一緒に購入されることの多い商品)
+      db 数量 DESC
+        c 商品画像
+          商品名
+          価格
+      i 数量選択:number(min 1)(val 1)
+      p カートに入れる:submit,cartin.php
 
   cart
+    p 数量変更・チェックした商品の削除を実行:submit,cart.php 表上、表下
+    (カートの中の商品)
+      db 注文日時 DESC,商品ID ASC
+        c 商品画像: product.pict
+          商品名: product.name
+          価格: product.price円(桁区切り)
+      i 数量:number(min 1)(val カートに入っている数量)
+      * 小計: 価格*数量円(桁区切り)
+      i :checkbox
+    * 合計点数: 数量の合計点
+    * 合計金額: 小計の合計円(桁区切り)
 
   clear_cart
+    a カートに商品を入れた状態でショッピングカート画面を開き、カートを空にするリンクをクリックする。
+    _b カートを空にしましたというメッセージが表示される
+    a 上に続き、ショッピングカートを開く
+    _b 現在カートに商品はありませんと表示される
 
 
   /user_menu/
 
     view
+      c メールアドレス: member.email
+        お名前: member.name
+        郵便番号: member.postal1(-)member.postal2
+        住所: member.address
+        電話番号: member.tel
+        性別: member.gender(1(男性), 2(女性))
+        年代: member.birth(Y年代)
 
     ordered
+      g 累計:term,all
+        24時間:term,day
+        週間:term,week
+        月間:term,month
+        年間:term,year
+      g pager 表上 表下
+      db 注文日時 DESC,商品ID ASC
+        c 注文日時: sales.created_at(Y/m/d H:i:d)
+          合計金額: SUM(sales_productprice * quantity)円(桁区切り)
+        c 商品画像: product.pict
+          商品名: product.name
+          価格: sales_product.price円(桁区切り)
+          数量: sales_product.quantity個
+          小計: (sales_product.price * quantity)円(桁区切り)
 
     reviewed
+      db 投稿日 DESC
+        c 商品名: product.name
+          評価: review.rating
+          本文: review.body
+          投稿日: review.created_at
 
     review_check
+      g 商品名:view.php?id=product.id
+      * 評価
+      * レビュー本文(改行反映)
+      p 投稿:submit,review_do.php
 
-    review_do
+    review_do 無し
 
     signup
+      i メールアドレス:email(maxlength=50)
+        パスワード:password
+        パスワード再入力:password
+        お名前:text(maxlength=15)
+        郵便番号1:text(maxlength=3)
+        郵便番号2:text(maxlength=4)
+        住所:text(maxlength=50)
+        電話番号:text
+        性別:radio
+        年代:select
+      p 確認:submit,signup_check.php
 
-    sigunup_check
+    signup_check
+      p 追加:submit,signup_do.php
 
-    signup_do
+    signup_do 無し
 
     edit
+      i メールアドレス:email(maxlength=50)(val member.email)
+        パスワード:password
+        パスワード再入力:password
+        お名前:text(maxlength=15)(val member.name)
+        郵便番号1:text(maxlength=3)(val member.postal1)
+        郵便番号2:text(maxlength=4)(val member.postal2)
+        住所:text(maxlength=50)(val member.address)
+        電話番号:text(val member.tel)
+        性別:radio(val member.gender(1(男性), 2(女性)))
+        年代:select(val member.birth(Y年代))
+      p 確認:submit,edit_check.php
 
     edit_check
+      p 確定:submit,edit_do.php
 
-    edit_do
+    edit_do 無し
 
     delete
+      c 会員ID: member.id
+        メールアドレス: member.email
+        お名前: member.name
+        郵便番号: member.postal1(-)member.postal2
+        住所: member.address
+        電話番号: member.tel
+        性別: member.gender(1(男性), 2(女性))
+        年代: member.birth(Y年代)
+      p 削除:submit,delete_do.php
 
-    delete_do
+    delete_do 無し
 
     done
+      - review_do からの遷移
+        g 商品名:shop/view.php?id=product.id
 
   /order/
-
     order
 
     order_check
