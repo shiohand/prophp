@@ -37,7 +37,7 @@
   } else {
     $signup = false;
   }
-  // IDが0以外、つまり会員のかんたん注文の場合
+  // $_SESSION['member_id'] != 0、つまり会員のかんたん注文の場合
   if (false) { // チート用にfalse 本来は$orderer->getId()
     // ログイン中のIDと一致しない注文はエラー
     if ($orderer->getID() !== $_SESSION['member_id']) {
