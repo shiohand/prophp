@@ -13,6 +13,11 @@
     $dao = new ProductDao();
     // sanitize
     $post = sanitize($_POST);
+    if (!isset($post['target']) || !isset($post['quantity'])) {
+      print '<p>エラーが発生しました</p>';
+      commonError('shop');
+    }
+
     $post_product_id = $post['target'];
     $post_quantity = $post['quantity'];
 
