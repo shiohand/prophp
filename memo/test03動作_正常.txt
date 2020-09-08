@@ -2,9 +2,13 @@
   入力フォームの動作、タイプの確認
   GETリクエストの動作
   POSTリクエストの動作
+  データベースと比較してデータが正しいことを確認
 
-  a 動作: 操作手順
+  a 動作: 操作手順はまだ
   -b 期待される結果
+  -a 次の操作
+
+  動作テストの手順指定の細かさがわからん。飛ばしてエラーメッセージとかバリデーションからする。
 
   ・フォーム
   i 項目:タイプ(他 制限)
@@ -27,7 +31,7 @@
   db 取得データの内容や順番が正しいか確認
   c 項目: 表示されるべきカラム
   
-  // behavior form
+  // action behavior form
   // mst_staff as staff, mst_product as product, dat_member as member, dat_review as review, dat_sales as sales, dat_sales_product as sales_product
 
 /admin/
@@ -55,11 +59,25 @@
     top
       db スタッフID ASC
         c スタッフID: staff.id
-          スタッフ名: staff.id
+          スタッフ名: staff.name
+        g 修正:id,staff.id
+          削除:id,staff.id
+
+      a スタッフのどれかの修正リンクを押す
+      -b そのスタッフの修正ページが表示される、修正できる
+      a スタッフのどれかの削除リンクを押す
+      -b そのスタッフの削除ページが表示される、削除できる
 
     view
-        c スタッフID: staff.id
-          スタッフ名: staff.id
+      c スタッフID: staff.id
+        スタッフ名: staff.name
+      g 修正:id,staff.id
+        削除:id,staff.id
+
+      a 修正リンクを押す
+      -b そのスタッフの修正ページが表示される、修正できる
+      a 削除リンクを押す
+      -b そのスタッフの削除ページが表示される、削除できる
 
     create
       i スタッフ名:text(maxlength=15)
@@ -67,8 +85,16 @@
         パスワード再入力:password
       p 確認:submit,create_check.php
 
+      a スタッフ追加1 : スタッフ名[test_staff] パスワード[test] パスワード再入力[test] を入力し確認ボタンを押す
+      -b スタッフ追加確認ページ(staff/create_check.php)へ遷移し、スタッフ名の欄にtest_staffが表示されている
+
     create_check
       p 追加:submit,create_do.php
+
+      a スタッフ追加2 : スタッフ名[test_staff]の確認画面の状態から追加ボタンを押す
+      -b 完了画面に遷移する
+      -a スタッフ一覧へリンクを押す
+      -b スタッフ一覧の一番下にスタッフ名[test_staff]のデータが表示されている
 
     create_do 無し
 
@@ -80,15 +106,28 @@
         新しいパスワード再入力:password
       p 確認:submit,edit_check.php
 
+      a スタッフ修正1 : スタッフ名[test_staff_edit] パスワード[test] パスワード再入力[test] を入力し確認ボタンを押す
+      -b スタッフ修正確認ページ(staff/edit_check.php)へ遷移し、スタッフ名の欄にtest_staff_editが表示されている
+
     edit_check
       p 確定:submit,edit_do.php
+
+      a スタッフ修正2 : スタッフ名[test_staff_edit]の確認画面の状態から確定ボタンを押す
+      -b 完了画面に遷移する
+      -a スタッフ一覧へリンクを押す
+      -b スタッフ一覧の一番下にスタッフ名[test_staff_edit]のデータが表示されている
 
     edit_do 無し
 
     delete
       c スタッフID: staff.id
-        スタッフ名: staff.id
+        スタッフ名: staff.name
       p 削除:submit,delete_do.php
+
+      a スタッフ削除 : スタッフ名[test_staff_edit]の確認画面の状態から削除ボタンを押す
+      -b 完了画面に遷移する
+      -a スタッフ一覧へリンクを押す
+      -b スタッフ一覧の一番下のスタッフ名[test_staff_edit]のデータがなくなっている
 
     delete_do 無し
     done 無し
@@ -97,9 +136,16 @@
 
     top
       db 商品ID ASC
-        商品ID: product.id
-        商品名: product.name
-        価格: product.price(桁区切り)円
+        c 商品ID: product.id
+          商品名: product.name
+          価格: product.price(桁区切り)円
+        g 修正:id,product.id
+          削除:id,product.id
+
+      a 商品のどれかの修正リンクを押す
+      -b その商品の修正ページが表示される、修正できる
+      a 商品のどれかの削除リンクを押す
+      -b その商品の削除ページが表示される、削除できる
 
     view
       c 商品ID: product.id
@@ -108,6 +154,13 @@
         発売日: product.release_date(Y-m-d)
         紹介文: product.content(改行反映)
         画像: product.pict
+      g 修正:id,product.id
+        削除:id,product.id
+
+      a 修正リンクを押す
+      -b その商品の修正ページが表示される、修正できる
+      a 削除リンクを押す
+      -b その商品の削除ページが表示される、削除できる
 
     create
       i 商品名:text(maxlength=30)
@@ -117,8 +170,16 @@
         画像:file(max_file_size=1048576(1M))(accept=image/*)
       p 確認:submit,create_check.php
 
+      a 商品追加1 : 商品名[test_product] 価格[13000] 発売日[2020-09-01] 紹介文[紹介文] 画像[任意の画像ファイル]を入力し確認ボタンを押す
+      -b 商品追加確認ページ(product/create_check.php)へ遷移し、商品名の欄にtest_productが表示されている
+
     create_check
       p 追加:submit,create_do.php
+
+      a 商品追加2 : 商品名[test_product]の確認画面の状態から追加ボタンを押す
+      -b 完了画面に遷移する
+      -a 商品一覧へリンクを押す
+      -b 商品一覧の一番下に商品名[test_product]のデータが表示されている
 
     create_do 無し
 
@@ -131,8 +192,16 @@
       i 画像:file(max_file_size=1048576(1M))(accept=image/*)
       p 確認:submit,edit_check.php
 
+      a 商品修正1 : 商品名[test_product_edit] 価格[13000] 発売日[2020-09-01] 紹介文[紹介文] 画像[任意の画像ファイル]を入力し確認ボタンを押す
+      -b 商品修正確認ページ(product/edit_check.php)へ遷移し、商品名の欄にtest_product_editが表示されている
+
     edit_check
       p 確定:submit,edit_do.php
+
+      a 商品修正2 : 商品名[test_product_edit]の確認画面の状態から確定ボタンを押す
+      -b 完了画面に遷移する
+      -a 商品一覧へリンクを押す
+      -b 商品一覧の一番下に商品名[test_product_edit]のデータが表示されている
 
     edit_do 無し
 
@@ -145,6 +214,11 @@
         画像: product.pict
       p 削除:submit,delete_do.php
 
+      a 商品削除 : 商品名[test_product_edit]の確認画面の状態から削除ボタンを押す
+      -b 完了画面に遷移する
+      -a 商品一覧へリンクを押す
+      -b 商品一覧の一番下の商品名[test_product_edit]のデータがなくなっている
+
     delete_do 無し
     done 無し
 
@@ -152,11 +226,18 @@
 
     top
       db 会員ID ASC
-        会員ID: member.id
-        メールアドレス: member.email
-        お名前: member.name
-        性別: member.gender(1(男性), 2(女性))
-        年代: member.birth(Y)
+        c 会員ID: member.id
+          メールアドレス: member.email
+          お名前: member.name
+          性別: member.gender(1(男性), 2(女性))
+          年代: member.birth(Y)
+        g 修正:id,member.id
+          削除:id,member.id
+
+      a 会員のどれかの修正リンクを押す
+      -b その会員の修正ページが表示される、修正できる
+      a 会員のどれかの削除リンクを押す
+      -b その会員の削除ページが表示される、削除できる
 
     view
       c 会員ID: member.id
@@ -167,6 +248,13 @@
         電話番号: member.tel
         性別: member.gender(1(男性), 2(女性))
         年代: member.birth(Y年代)
+      g 修正:id,member.id
+        削除:id,member.id
+
+      a 修正リンクを押す
+      -b その会員の修正ページが表示される、修正できる
+      a 削除リンクを押す
+      -b その会員の削除ページが表示される、削除できる
 
     create
       i メールアドレス:email(maxlength=50)
@@ -181,8 +269,16 @@
         年代:select
       p 確認:submit,create_check.php
 
+      a 会員追加1 : メールアドレス[test_member@test.com] パスワード[test] パスワード再入力[test] お名前[test_member] 郵便番号1[135] 郵便番号2[2468] 住所[testaddress] 電話番号[098-765-4321] 性別[女性] 年代[2000年代]を入力し確認ボタンを押す
+      -b 会員追加確認ページ(member/create_check.php)へ遷移し、お名前の欄にtest_memberが表示されている
+
     create_check
       p 追加:submit,create_do.php
+
+      a 会員追加2 : お名前[test_member]の確認画面の状態から追加ボタンを押す
+      -b 完了画面に遷移する
+      -a 会員一覧へリンクを押す
+      -b 会員一覧の一番下にお名前[test_member]のデータが表示されている
 
     create_do 無し
 
@@ -200,8 +296,16 @@
         年代:select(val member.birth(Y年代))
       p 確認:submit,edit_check.php
 
+      a 会員修正1 : メールアドレス[test_member@test.com] お名前[test_member_edit] パスワード[test] パスワード再入力[test] お名前[test_member] 郵便番号1[135] 郵便番号2[2468] 住所[testaddress] 電話番号[098-765-4321] 性別[女性] 年代[2000年代] を入力し確認ボタンを押す
+      -b 会員修正確認ページ(member/edit_check.php)へ遷移し、お名前の欄にtest_member_editが表示されている
+
     edit_check
       p 確定:submit,edit_do.php
+
+      a 会員修正2 : お名前[test_member_edit]の確認画面の状態から確定ボタンを押す
+      -b 完了画面に遷移する
+      -a 会員一覧へリンクを押す
+      -b 会員一覧の一番下にお名前[test_member_edit]のデータが表示されている
 
     edit_do 無し
 
@@ -216,6 +320,11 @@
         年代: member.birth(Y年代)
       p 削除:submit,delete_do.php
 
+      a 会員削除 : お名前[test_member_edit]の確認画面の状態から削除ボタンを押す
+      -b 完了画面に遷移する
+      -a 会員一覧へリンクを押す
+      -b 会員一覧の一番下のお名前[test_member_edit]のデータがなくなっている
+
     delete_do 無し
     done 無し
 
@@ -224,6 +333,9 @@
     top
       i 注文ID:text
       p 注文詳細表示:submit,sale_data.php
+
+      a 注文ID[1]を入力して注文詳細表示ボタンを押す
+      -b sales_dataに遷移して注文ID1の注文が表示される
 
     sales_data
       i 注文ID:text
@@ -238,6 +350,9 @@
           数量(個): sales_product.quantity
           小計(円): (sales_product.price * quantity)(桁区切り)
       c 合計金額: SUM(price * quantity)円(桁区切り)
+
+      a 注文ID[2]を入力して注文詳細表示ボタンを押す
+      -b sales_dataに遷移して注文ID2の注文が表示される
 
     order
       l リセット
@@ -266,6 +381,31 @@
           注文日時: sales.created_at(Y-m-d H:i:s)
       p CSVダウンロード:submit,download_csv.php
 
+      a リセットを押す
+      -b クエリパラメータがなくなり、デフォルトの表示になる
+      a クリアを押す
+      -b フォームによる絞り込みが解除されるが、クエリパラメータはなくならない
+      a 累計 24時間 週間 月間 年間を切り替える
+      -b 期間に対応したデータが表示される
+      a ソートを表す△▽を左からひとつずつ切り替える。
+      -b その項目の昇順または降順に並べ替えられる
+      a 期間指定の1つ目のフォームに日付を入力して絞り込みボタンを押す
+      -b その日付以降すべてのデータが表示される
+      a 期間指定の2つ目のフォームに日付を入力して絞り込みボタンを押す
+      -b その日付以前すべてのデータが表示される
+      a 期間指定の両方のフォームに日付を入力して絞り込みボタンを押す
+      -b その期間のデータが表示される
+      a 会員IDを入力して絞り込みボタンを押す
+      -b その会員IDによる注文データが表示される
+      a 商品IDを入力して絞り込みボタンを押す
+      -b その商品IDを含む注文データが表示される
+      a ページャーの動作
+      -b なんか確認する
+      a その他組み合わせ……
+      -b 必要なだけ
+      a CSVダウンロードを押す
+      -b download_csvへ遷移し、注文データテーブルをダウンロードしますと表示される
+
     sales
       l リセット
       g 日別:interv,day
@@ -282,6 +422,29 @@
         c 期間: sales_product.created_at(intervが day:Y-m-d month:Y-m year:Y)
           売上金額(円): SUM(sales_product.price * quantity)(桁区切り)
       p CSVダウンロード:submit,download_csv.php
+
+      a リセットを押す
+      -b クエリパラメータがなくなり、デフォルトの表示になる
+      a クリアを押す
+      -b フォームによる絞り込みが解除されるが、クエリパラメータはなくならない
+      a 日別 月別 年別を切り替える
+      -b 期間に対応したデータが表示される
+      a ソートを表す△▽を左からひとつずつ切り替える。
+      -b その項目の昇順または降順に並べ替えられる
+      a リンクによる期間変更をした状態でソートを変更する
+      -b 期間とソートが同時に反映される（全組み合わせ確認？）
+      a 期間指定の1つ目のフォームに日付を入力して絞り込みボタンを押す
+      -b その日付以降すべてのデータが表示される
+      a 期間指定の2つ目のフォームに日付を入力して絞り込みボタンを押す
+      -b その日付以前すべてのデータが表示される
+      a 期間指定の両方のフォームに日付を入力して絞り込みボタンを押す
+      -b その期間のデータが表示される
+      a ページャーの動作
+      -b なんか確認する
+      a 組み合わせ……
+      -b 必要なだけ
+      a CSVダウンロードを押す
+      -b download_csvへ遷移し、総売上テーブルをダウンロードしますと表示される
 
     product_sales
       l リセット
@@ -307,6 +470,31 @@
           売上金額(円): SUM(sales_product.price * quantity)(桁区切り)
           平均単価(円): 売上金額(円)/売上個数(個)(桁区切り)
       p CSVダウンロード:submit,download_csv.php
+      
+      a リセットを押す
+      -b クエリパラメータがなくなり、デフォルトの表示になる
+      a クリアを押す
+      -b フォームによる絞り込みが解除されるが、クエリパラメータはなくならない
+      a 累計 24時間 週間 月間 年間を切り替える
+      -b 期間に対応したデータが表示される
+      a ソートを表す△▽を左からひとつずつ切り替える。
+      -b その項目の昇順または降順に並べ替えられる
+      a 期間指定の1つ目のフォームに日付を入力して絞り込みボタンを押す
+      -b その日付以降すべてのデータが表示される
+      a 期間指定の2つ目のフォームに日付を入力して絞り込みボタンを押す
+      -b その日付以前すべてのデータが表示される
+      a 期間指定の両方のフォームに日付を入力して絞り込みボタンを押す
+      -b その期間のデータが表示される
+      a 商品IDを入力して絞り込みボタンを押す
+      -b その商品IDを含む注文データが表示される
+      a 商品IDを複数入力して絞り込みボタンを押す
+      -b その商品IDを含む注文データが表示される
+      a ページャーの動作
+      -b なんか確認する
+      a その他組み合わせ……
+      -b 必要なだけ
+      a CSVダウンロードを押す
+      -b download_csvへ遷移し、商品別売上テーブルをダウンロードしますと表示される
 
     one_product_sales
       l リセット
@@ -326,9 +514,36 @@
           売上金額(円): SUM(sales_product.price * quantity)(桁区切り)
       p CSVダウンロード:submit,download_csv.php
 
-    download_csv
-        ダウンロード
+      a リセットを押す
+      -b クエリパラメータがなくなり、デフォルトの表示になる
+      a クリアを押す
+      -b フォームによる絞り込みが解除されるが、クエリパラメータはなくならない
+      a 日別 月別 年別を切り替える
+      -b 期間に対応したデータが表示される
+      a ソートを表す△▽を左からひとつずつ切り替える。
+      -b その項目の昇順または降順に並べ替えられる
+      a リンクによる期間変更をした状態でソートを変更する
+      -b 期間とソートが同時に反映される（全組み合わせ確認？）
+      a 期間指定の1つ目のフォームに日付を入力して絞り込みボタンを押す
+      -b その日付以降すべてのデータが表示される
+      a 期間指定の2つ目のフォームに日付を入力して絞り込みボタンを押す
+      -b その日付以前すべてのデータが表示される
+      a 期間指定の両方のフォームに日付を入力して絞り込みボタンを押す
+      -b その期間のデータが表示される
+      a 商品IDを入力して絞り込みボタンを押す
+      -b その商品IDを含む注文データが表示される
+      a ページャーの動作
+      -b なんか確認する
+      a 組み合わせ……
+      -b 必要なだけ
+      a CSVダウンロードを押す
+      -b download_csvへ遷移し、総売上テーブルをダウンロードしますと表示される
 
+    download_csv
+      b ダウンロード
+
+      ａ admin/order/のorder,sale,product_sales,one_product_salesのいずれかのCSVダウンロードボタンからアクセスした状態で、ダウンロードボタンを押す
+      -b ダウンロードボタンを押すページで表示していたデータをCSV化したrecords.csvがダウンロードされる
 
 /shop/
   login
@@ -366,6 +581,9 @@
           商品名: product.name
           発売日: product.release_date(Y年m月d日)
 
+    a ランキング・新着商品・発売予定それぞれに表示されている商品名をクリックして遷移する
+    -b その商品のページが表示される
+
   ranking
     g 累計:term,all
       24時間:term,day
@@ -377,6 +595,11 @@
       c 商品画像: product.pict
         商品名: product.name
         価格: product.price
+
+    a 累計 24時間 週間 月間 年間を切り替える
+    -b 期間に対応したデータが表示される
+    a 商品名をクリックして遷移する
+    -b その商品のページが表示される
 
   product
     g 発売日の近い順:sort,rat
@@ -390,6 +613,15 @@
         価格: product.price円(桁区切り)
         発売日: product.release_date(Y年m月d日)
         評価平均: AVG(review.rating)(少数第一位まで)
+    
+    a 発売日の近い順 価格の安い順 価格の高い順 評価の高い順を切り替える
+    -b 期間に対応したデータが表示される
+    a ページャーの動作
+    -b なんか確認する
+    a 組み合わせ……
+    -b 必要なだけ
+    a 商品名をクリックして遷移する
+    -b その商品のページが表示される
 
   view
     c 商品画像: product.pict
@@ -415,6 +647,10 @@
           本文: review.body
           投稿日: review.created_at
 
+    a 数量を選択してカートに入れる
+    -b cartin.phpに遷移し、その商品がその数量でカートに追加される
+    a ログインした状態でレビューを投稿する
+    -b review_checkに遷移し、開いていた商品名と入力した内容が表示されている
 
   cartin
     g 商品名:view.php?id=$post_product_id
@@ -428,10 +664,17 @@
       i 数量選択:number(min 1)(val 1)
       p カートに入れる:submit,cartin.php
 
+    a 「{商品名}をカートに追加しました。」の商品名をクリックして遷移する
+    -b その商品のページが表示される
+    a 一緒に購入されることの多い商品の商品名をクリックして遷移する
+    -b その商品のページが表示される
+    a 一緒に購入されることの多い商品を数量選択してカートに入れるを押す
+    -b cartin.phpに遷移し、その商品がその数量でカートに追加される
+
   cart
     p 数量変更・チェックした商品の削除を実行:submit,cart.php 表上、表下
-    (カートの中の商品)
-      db 注文日時 DESC,商品ID ASC
+    (カートの中の商品)($_SESSION['cart'])(カートに入れたのが古い順)
+      db
         c 商品画像: product.pict
           商品名: product.name
           価格: product.price円(桁区切り)
@@ -440,12 +683,17 @@
       i :checkbox
     * 合計点数: 数量の合計点
     * 合計金額: 小計の合計円(桁区切り)
+    
+    a 商品名をクリックして遷移する
+    -b その商品のページが表示される
+    a カートの中の商品の数量を変更して、数量変更・チェックした商品の削除を実行ボタンを押す
+    -b 入力したとおりにカートの中の商品の数量が変更される
+    a チェックボックスにチェックを入れて、数量変更・チェックした商品の削除を実行ボタンを押す
+    -b チェックしたカートの中の商品がカートから削除される
+    a カートを空にするリンクを押す
+    -b clear_cart.phpに遷移し、カートを空にしましたと表示される。カートが空になる
 
-  clear_cart
-    a カートに商品を入れた状態でショッピングカート画面を開き、カートを空にするリンクをクリックする。
-    _b カートを空にしましたというメッセージが表示される
-    a 上に続き、ショッピングカートを開く
-    _b 現在カートに商品はありませんと表示される
+  clear_cart 無し
 
 
   /user_menu/
@@ -458,6 +706,11 @@
         電話番号: member.tel
         性別: member.gender(1(男性), 2(女性))
         年代: member.birth(Y年代)
+        
+      a 修正リンクを押す
+      -b 会員修正ページが表示される、修正できる
+      a 削除リンクを押す
+      -b 会員削除ページが表示される、削除できる
 
     ordered
       g 累計:term,all
@@ -475,6 +728,15 @@
           数量: sales_product.quantity個
           小計: (sales_product.price * quantity)円(桁区切り)
 
+      a 累計 24時間 週間 月間 年間を切り替える
+      -b 期間に対応したデータが表示される
+      a ページャーの動作
+      -b なんか確認する
+      a その他組み合わせ……
+      -b 必要なだけ
+      a 商品名をクリックして遷移する
+      -b その商品のページが表示される
+
     reviewed
       db 投稿日 DESC
         c 商品名: product.name
@@ -487,6 +749,11 @@
       * 評価
       * レビュー本文(改行反映)
       p 投稿:submit,review_do.php
+
+      a 商品名のリンクを押す
+      -b その商品ページへ遷移する
+      a 投稿ボタンを押す
+      -b レビューを投稿しましたのメッセージが表示されレビューが投稿される
 
     review_do 無し
 
@@ -504,7 +771,7 @@
       p 確認:submit,signup_check.php
 
     signup_check
-      p 追加:submit,signup_do.php
+      p 登録:submit,signup_do.php
 
     signup_do 無し
 
@@ -545,22 +812,83 @@
 
   /order/
     order
+      i 会員登録:radio
+        メールアドレス:email(maxlength=50)
+        お名前:text(maxlength=15)
+        郵便番号1:text(maxlength=3)
+        郵便番号2:text(maxlength=4)
+        住所:text(maxlength=50)
+        電話番号:text
+        パスワード:password
+        パスワード再入力:password
+        性別:radio
+        年代:select
+      p 確認:submit,order_check.php
+      (カートの中の商品)($_SESSION['cart'])
+        db
+          c 商品名: product.name
+            価格: product.price円(桁区切り)
+        * 数量: カートに入っている数量
+        * 小計: 価格*数量円(桁区切り)
+        * 合計点数: 数量の合計点
+        * 合計金額: 小計の合計円(桁区切り)
 
     order_check
+      p 注文を確定する:submit,order_do.php
+      (カートの中の商品)($_SESSION['cart'])
+        db
+          c 商品名: product.name
+            価格: product.price円(桁区切り)
+        * 数量: カートに入っている数量
+        * 小計: 価格*数量円(桁区切り)
+        * 合計点数: 数量の合計点
+        * 合計金額: 小計の合計円(桁区切り)
 
     order_member
+      c 会員ID: member.id
+        メールアドレス: member.email
+        お名前: member.name
+        郵便番号: member.postal1(-)member.postal2
+        住所: member.address
+        電話番号: member.tel
+      p 注文を確定する:submit,order_do.php
+      (カートの中の商品)($_SESSION['cart'])
+        db
+          c 商品名: product.name
+            価格: product.price円(桁区切り)
+        * 数量: カートに入っている数量
+        * 小計: 価格*数量円(桁区切り)
+        * 合計点数: 数量の合計点
+        * 合計金額: 小計の合計円(桁区切り)
 
-    order_do
+    order_do 無し
 
     order_done
+      (表示用メッセージ)
+      c 会員ID: member.id
+        メールアドレス: member.email
+        お名前: member.name
+        郵便番号: member.postal1(-)member.postal2
+        住所: member.address
+        電話番号: member.tel
+      (メール用メッセージ)($_SESSION['cart'])
+        db
+          c 商品名: product.name
+            価格: product.price円(桁区切り)
+        * 数量: カートに入っている数量
+        * 小計: 価格*数量円(桁区切り)
 
 
 /component/
 
   header_admin
+    -ログイン時
+      c スタッフ名: staff.name
 
-  footer_admin
+  footer_admin 無し
 
   header_shop
+    -ログイン時
+      c ユーザー名: member.name
 
-  footer_shop
+  footer_shop 無し

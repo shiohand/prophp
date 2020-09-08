@@ -50,7 +50,7 @@
     order
     sales
     product_sales
-    oen_product_sales
+    one_product_sales
     download_csv
 
 /shop/
@@ -74,7 +74,6 @@
     reviewed
     review_check
     review_do
-    done
     signup
     sigunup_check
     signup_do
