@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
   
   require_once(D_ROOT.'database/ProductDao.php');
 
@@ -8,19 +9,15 @@
   include(D_ROOT.'component/header_admin.php');
 ?>
 <?php
-  if (isset($_SESSION['product'])) {
-    $product = unserialize($_SESSION['product']);
-  } else {
-    print '<p>エラーが発生しました</p>';
-    commonError('admin');
-  }
+  reqSession('product');
+  $product = unserialize($_SESSION['product']);
+  unset($_SESSION['product']);
 
-  // sanitize
-  $post = sanitize($_POST);
-  $post_name = $post['name'];
-  $post_price = $post['price'];
-  $post_release_date = $post['release_date'];
-  $post_content = $post['content'];
+  reqPost();
+  $post_name = inputPost('name');
+  $post_price = inputPost('price');
+  $post_release_date = inputPost('release_date');
+  $post_content = inputPost('content');
   $post_pict = $_FILES['pict'];
   // 画像変更判定用
   $before_pict = $product->getPict();
@@ -89,7 +86,7 @@
         $pict_name = 'tmp'.rand(0, 20).$type;
       }
     } catch (PDOException $e) {
-      dbError('admin');
+      dbError();
     }
     // /pict/tmp/ファイル名 で一時保存
     move_uploaded_file($post_pict['tmp_name'],'./pict/tmp/'.$pict_name);
@@ -159,8 +156,6 @@
 
       // 処理のために修正前のファイル名を送る
       $_SESSION['before_pict'] = $before_pict;
-
-      unset($_SESSION['product'])
     ?>
   <?php endif ?>
 </form>

@@ -64,9 +64,9 @@
           削除:id,staff.id
 
       a スタッフのどれかの修正リンクを押す
-      -b そのスタッフの修正ページが表示される、修正できる
+      -b そのスタッフの修正ページが表示される
       a スタッフのどれかの削除リンクを押す
-      -b そのスタッフの削除ページが表示される、削除できる
+      -b そのスタッフの削除ページが表示される
 
     view
       c スタッフID: staff.id
@@ -75,9 +75,9 @@
         削除:id,staff.id
 
       a 修正リンクを押す
-      -b そのスタッフの修正ページが表示される、修正できる
+      -b そのスタッフの修正ページが表示される
       a 削除リンクを押す
-      -b そのスタッフの削除ページが表示される、削除できる
+      -b そのスタッフの削除ページが表示される
 
     create
       i スタッフ名:text(maxlength=15)
@@ -122,7 +122,8 @@
     delete
       c スタッフID: staff.id
         スタッフ名: staff.name
-      p 削除:submit,delete_do.php
+      - 表示中のIDとログイン中のIDが別の場合
+        p 削除:submit,delete_do.php
 
       a スタッフ削除 : スタッフ名[test_staff_edit]の確認画面の状態から削除ボタンを押す
       -b 完了画面に遷移する
@@ -276,9 +277,7 @@
       p 追加:submit,create_do.php
 
       a 会員追加2 : お名前[test_member]の確認画面の状態から追加ボタンを押す
-      -b 完了画面に遷移する
-      -a 会員一覧へリンクを押す
-      -b 会員一覧の一番下にお名前[test_member]のデータが表示されている
+      -b 追加される
 
     create_do 無し
 
@@ -769,9 +768,16 @@
         性別:radio
         年代:select
       p 確認:submit,signup_check.php
+      
+
+      a 会員追加1 : メールアドレス[test_member@test.com] パスワード[test] パスワード再入力[test] お名前[test_member] 郵便番号1[135] 郵便番号2[2468] 住所[testaddress] 電話番号[098-765-4321] 性別[女性] 年代[2000年代]を入力し確認ボタンを押す
+      -b 会員追加確認ページ(user_menu/signup_check.php)へ遷移し、お名前の欄にtest_memberが表示されている
 
     signup_check
       p 登録:submit,signup_do.php
+
+      a 会員追加2 : お名前[test_member]の確認画面の状態から追加ボタンを押す
+      -b 完了画面に遷移する。会員データが追加される
 
     signup_do 無し
 
@@ -788,8 +794,14 @@
         年代:select(val member.birth(Y年代))
       p 確認:submit,edit_check.php
 
+      a 会員修正1 : メールアドレス[test_member@test.com] お名前[test_member_edit] パスワード[test] パスワード再入力[test] お名前[test_member] 郵便番号1[135] 郵便番号2[2468] 住所[testaddress] 電話番号[098-765-4321] 性別[女性] 年代[2000年代] を入力し確認ボタンを押す
+      -b 会員修正確認ページ(user_menu/edit_check.php)へ遷移し、お名前の欄にtest_member_editが表示されている
+
     edit_check
       p 確定:submit,edit_do.php
+
+      a 会員修正2 : お名前[test_member_edit]の確認画面の状態から確定ボタンを押す
+      -b 完了画面に遷移する。会員データが修正される
 
     edit_do 無し
 
@@ -803,6 +815,9 @@
         性別: member.gender(1(男性), 2(女性))
         年代: member.birth(Y年代)
       p 削除:submit,delete_do.php
+
+      a 会員削除 : お名前[test_member_edit]の確認画面の状態から削除ボタンを押す
+      -b 会員データが削除される。ログアウトされ、ログイン画面に遷移する。
 
     delete_do 無し
 
@@ -833,6 +848,11 @@
         * 合計点数: 数量の合計点
         * 合計金額: 小計の合計円(桁区切り)
 
+      a 今回だけの注文を選択してフォームを入力、確認ボタンを押す
+      -b order_checkに遷移して注文データが表示される
+      a 注文と同時に会員登録を選択してフォームを入力、確認ボタンを押す
+      -b order_checkに遷移して注文データが表示される
+
     order_check
       p 注文を確定する:submit,order_do.php
       (カートの中の商品)($_SESSION['cart'])
@@ -843,6 +863,8 @@
         * 小計: 価格*数量円(桁区切り)
         * 合計点数: 数量の合計点
         * 合計金額: 小計の合計円(桁区切り)
+      a 確認画面の状態から注文を確定するボタンを押す
+      -b 注文情報が登録され、order_doneに遷移して注文完了画面が表示される
 
     order_member
       c 会員ID: member.id
@@ -860,6 +882,9 @@
         * 小計: 価格*数量円(桁区切り)
         * 合計点数: 数量の合計点
         * 合計金額: 小計の合計円(桁区切り)
+        
+      a 確認画面の状態から注文を確定するボタンを押す
+      -b 注文情報が登録され、order_doneに遷移して注文完了画面が表示される
 
     order_do 無し
 
@@ -890,5 +915,7 @@
   header_shop
     -ログイン時
       c ユーザー名: member.name
+    a ログイン中、ヘッダーの会員名のリンクを押す
+    -b view.phpに遷移し、ログイン中のユーザーの情報が表示されている
 
   footer_shop 無し

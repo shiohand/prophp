@@ -1,9 +1,10 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
   
   require_once(D_ROOT.'database/MemberDao.php');
-  
+
   $title = '会員追加確認';
   include(D_ROOT.'component/header_admin.php');
 ?>
@@ -42,7 +43,7 @@
         $submit_check = false;
       }
     } catch (PDOException $e) {
-      dbError('admin');
+      dbError();
     }
   }
   // パスワード

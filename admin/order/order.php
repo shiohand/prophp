@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
 
   require_once(D_ROOT.'database/OrderDao.php');
   require_once(D_ROOT.'common/outputOrders.php');
@@ -9,42 +10,40 @@
   include(D_ROOT.'component/header_admin.php');
 ?>
 <?php
+  $post_member_id = inputPost('member_id');
+  $post_product_id = inputPost('product_id');
+  $post_at_start = inputPost('at_start');
+  $post_at_end = inputPost('at_end');
 
-  $get = sanitize($_GET);
-  $post = sanitize($_POST);
-  if (isset($_POST['submit_clear'])) {
-    unset($post['at_start']);
-    unset($post['at_end']);
-    unset($post['member_id']);
-    unset($post['product_id']);
+  if (inputPost('submit_clear') === 'クリア') {
+    $post_member_id = '';
+    $post_product_id = '';
+    $post_at_start = '';
+    $post_at_end = '';
   }
 
   // id
-  $post_member_id = $post['member_id'] ?? '';
   if ($post_member_id && !preg_match('/\A\d+\z/', $post_member_id)) {
     $post_member_id = 'error';
   };
   // id
-  $post_product_id = $post['product_id'] ?? '';
   if ($post_product_id && !preg_match('/\A\d+\z/', $post_product_id)) {
     $post_product_id = 'error';
   };
 
   // BETWEEN
-  $get_term = $get['term'] ?? '';
+  $get_term = inputGet('term');
   list($termAs, $betweenAnd) = getTerms($get_term, 'dat_sales.created_at');
 
   // BETWEEN
-  $post_at_start = $post['at_start'] ?? '';
-  $post_at_end = $post['at_end'] ?? '';
   $betweenAnd .= makeOptBetween('dat_sales.created_at', $post_at_start, $post_at_end);
   
   // ORDER BY
-  $get_sort = $get['sort'] ?? '';
+  $get_sort = inputGet('sort');
   list($sortAs, $orderBy) = getOrderByForOrder($get_sort);
 
   // LIMIT pager
-  $page = $get['p'] ?? '1';
+  $page = pageCheck(inputGet('p', '1'));
   if ((!preg_match('/\A\d+\z/', $page)) || $page == '0') {
     $page = '1';
   }
@@ -54,7 +53,7 @@
     $dao = new OrderDao();
     $count = $dao->getCountForOrder($post_product_id, $post_member_id, $betweenAnd);
   } catch (PDOException $e) {
-    dbError('admin');
+    dbError();
   }
   $pager = createPager($page, $count, $per_page);
 
@@ -153,7 +152,7 @@
 
 <?php
   } catch (PDOException $e) {
-    dbError('admin');
+    dbError();
   }
 ?>
 

@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  blockLoginAdmin();
+  define('BASE', 'admin');
+  blockLogin();
   
   $title = 'ログイン';
   include(D_ROOT.'component/header_admin.php');

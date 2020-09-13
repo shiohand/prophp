@@ -1,28 +1,23 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
-  
+  define('BASE', 'admin');
+  reqLogin();
+
   require_once(D_ROOT.'database/ProductDao.php');
 ?>
 <?php
-  if (isset($_SESSION['up_product'])) {
-    $up_product = unserialize($_SESSION['up_product']);
-  } else {
-    print '<p>エラーが発生しました</p>';
-    commonError('admin');
-  }
-  if (isset($_SESSION['before_pict'])) {
-    $before_pict = unserialize($_SESSION['before_pict']);
-  } else {
-    print '<p>エラーが発生しました</p>';
-    commonError('admin');
-  }
+  reqSession('up_product', 'before_pict');
+  $up_product = unserialize($_SESSION['up_product']);
+  unset($_SESSION['up_product']);
+  $before_pict = unserialize($_SESSION['before_pict']);
+  unset($_SESSION['before_pict']);
+  
   $new_pict = $up_product->getPict();
   $before_pict = $_SESSION['before_pict'];
 
   try {
     $dao = new ProductDao();
-    $product = $dao->update($up_product);
+    $dao->update($up_product);
 
     // 画像の変更ある場合
     if ($before_pict !== $new_pict) {
@@ -37,13 +32,10 @@
     
     $_SESSION['msg'] = '商品:'.$up_product->getName().' (ID:'.$up_product->getId().') を修正しました';
     
-    unset($_SESSION['before_pict']);
-    unset($_SESSION['up_product']);
-    
     header('Location: done.php');
     exit();
   
   } catch (PDOException $e) {
-    dbError('admin');
+    dbError();
   }
 ?>

@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
 
   $title = '商品追加';
   include(D_ROOT.'component/header_admin.php');

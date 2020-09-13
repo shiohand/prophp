@@ -1,13 +1,14 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  blockLoginAdmin();
+  define('BASE', 'admin');
+  blockLogin();
 
   require_once(D_ROOT.'database/StaffDao.php');
   
   try {
-    $post = sanitize($_POST);
-    $post_id = $post['id'];
-    $post_password = $post['password'];
+    reqPost();
+    $post_id = inputPost('id');
+    $post_password = inputPost('password');
 
     $dao = new StaffDao();
     $staff = $dao->loginCheck($post_id, md5($post_password));
@@ -20,7 +21,7 @@
       exit();
     }
   } catch (PDOException $e) {
-    dbError('admin');
+    dbError();
   }
 ?>
 <?php

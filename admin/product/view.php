@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
   
   require_once(D_ROOT.'database/ProductDao.php');
 
@@ -8,12 +9,13 @@
   include(D_ROOT.'component/header_admin.php');
 ?>
 <?php
-  $get = sanitize($_GET);
-  $id = $get['id'];
+  reqGet('id');
+  $id = inputGet('id');
 
   try {
     $dao = new ProductDao();
     $product = $dao->findById($id);
+    blockModelEmpty($product);
     $param = http_build_query(['id' => $product->getId()]);
 ?>
 
@@ -55,7 +57,7 @@
 
 <?php
   } catch (PDOException $e) {
-    dbError('admin');
+    dbError();
   }
 ?>
 

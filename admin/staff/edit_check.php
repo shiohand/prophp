@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
   
   require_once(D_ROOT.'database/Staff.php');
 
@@ -8,19 +9,15 @@
   include(D_ROOT.'component/header_admin.php');
 ?>
 <?php
-  if (isset($_SESSION['staff'])) {
-    $staff = unserialize($_SESSION['staff']);
-  } else {
-    print '<p>エラーが発生しました</p>';
-    commonError('admin');
-  }
-  
-  // sanitize
-  $post = sanitize($_POST);
-  $post_name = $post['name'];
-  $post_password = $post['password'];
-  $post_newpassword = $post['new_password'];
-  $post_newpassword2 = $post['new_password2'];
+  reqSession('staff');
+  $staff = unserialize($_SESSION['staff']);
+  unset($_SESSION['staff']);
+
+  reqPost();
+  $post_name = inputPost('name');
+  $post_password = inputPost('password');
+  $post_newpassword = inputPost('new_password');
+  $post_newpassword2 = inputPost('new_password2');
   
   // エラーチェック
   $error = array();
@@ -90,8 +87,6 @@
       
       $up_staff = new Staff($staff->getId(), $post_name, $post_password, $staff->getCreatedAt());
       $_SESSION['up_staff'] = serialize($up_staff);
-
-      unset($_SESSION['staff'])
     ?>
   <?php endif ?>
 </form>

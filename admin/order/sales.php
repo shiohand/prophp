@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
 
   require_once(D_ROOT.'database/OrderDao.php');
   require_once(D_ROOT.'common/outputOrders.php');
@@ -9,35 +10,34 @@
   include(D_ROOT.'component/header_admin.php');
 ?>
 <?php
-  $get = sanitize($_GET);
-  $post = sanitize($_POST);
-  if (isset($_POST['submit_clear'])) {
-    unset($post['at_start']);
-    unset($post['at_end']);
+  $post_at_start = inputPost('at_start');
+  $post_at_end = inputPost('at_end');
+
+  if (inputPost('submit_clear') === 'クリア') {
+    $post_at_start = '';
+    $post_at_end = '';
   }
 
   // 日別, 月別, ...
-  $get_interv = $get['interv'] ?? '';
+  $get_interv = inputGet('interv');
   list($intervAs, $interv) = getIntervs($get_interv);
 
   // BETWEEN
-  $post_at_start = $post['at_start'] ?? '';
-  $post_at_end = $post['at_end'] ?? '';
   $betweenAnd = makeOptBetween('dat_sales_product.created_at', $post_at_start, $post_at_end);
 
   // ORDER BY
-  $get_sort = $get['sort'] ?? '';
+  $get_sort = inputGet('sort');
   list($sortAs, $orderBy) = getOrderByForSalesAndOPSales($get_sort);
 
   // LIMIT pager
-  $page = $get['p'] ?? '1';
+  $page = pageCheck(inputGet('p', '1'));
   $per_page = 30;
   $offset = ($page - 1) * $per_page;
   try {
     $dao = new OrderDao();
     $count = $dao->getCountForSales($interv, $betweenAnd);
   } catch (PDOException $e) {
-    dbError('admin');
+    dbError();
   }
   $pager = createPager($page, $count, $per_page);
 
@@ -108,7 +108,7 @@
 
 <?php
   } catch (PDOException $e) {
-    dbError('admin');
+    dbError();
   }
 ?>
 

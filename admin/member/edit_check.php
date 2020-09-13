@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
   
   require_once(D_ROOT.'database/MemberDAO.php');
   
@@ -8,26 +9,22 @@
   include(D_ROOT.'component/header_admin.php');
 ?>
 <?php
-  if (isset($_SESSION['member'])) {
-    $member = unserialize($_SESSION['member']);
-  } else {
-    print '<p>エラーが発生しました</p>';
-    commonError('admin');
-  }
+  reqSession('member');
+  $member = unserialize($_SESSION['member']);
+  unset($_SESSION['member']);
 
-  // sanitize
-  $post = sanitize($_POST);
-  $post_email = $post['email'];
-  $post_password = $post['password'];
-  $post_newpassword = $post['new_password'];
-  $post_newpassword2 = $post['new_password2'];
-  $post_name = $post['name'];
-  $post_postal1 = $post['postal1'];
-  $post_postal2 = $post['postal2'];
-  $post_address = $post['address'];
-  $post_tel = $post['tel'];
-  $post_gender = $post['gender'];
-  $post_birth = $post['birth'];
+  reqPost();
+  $post_email = inputPost('email');
+  $post_password = inputPost('password');
+  $post_newpassword = inputPost('new_password');
+  $post_newpassword2 = inputPost('new_password2');
+  $post_name = inputPost('name');
+  $post_postal1 = inputPost('postal1');
+  $post_postal2 = inputPost('postal2');
+  $post_address = inputPost('address');
+  $post_tel = inputPost('tel');
+  $post_gender = inputPost('gender');
+  $post_birth = inputPost('birth');
 
   // エラーチェック
   $error = array();
@@ -51,7 +48,7 @@
         $submit_check = false;
       }
     } catch (PDOException $e) {
-      dbError('admin');
+      dbError();
     }
   }
   // パスワード
@@ -100,7 +97,13 @@
     $submit_check = false;
   }
   // 性別
+  if ($post_gender !== '1' && $post_gender !== '0') {
+    commonError();
+  }
   // 年代
+  if ($post_birth % 10 !== 0 || $post_birth < 1910 || round(intval(date('Y')), -1) < $post_birth) {
+    commonError();
+  }
 ?>
 
 <h1>会員修正確認</h1>
@@ -191,8 +194,6 @@
 
       $up_member = new Member($member->getId(), $post_email, $post_password, $post_name, $post_postal1, $post_postal2, $post_address, $post_tel, $post_gender, $post_birth, $member->getCreatedAt());
       $_SESSION['up_member'] = serialize($up_member);
-      
-      unset($_SESSION['member'])
     ?>
   <?php endif ?>
 </form>

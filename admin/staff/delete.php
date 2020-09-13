@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
   
   require_once(D_ROOT.'database/StaffDao.php');
 
@@ -8,12 +9,13 @@
   include(D_ROOT.'component/header_admin.php');
 ?>
 <?php
-  $get = sanitize($_GET);
-  $id = $get['id'];
+  reqGet('id');
+  $id = inputGet('id');
 
   try {
     $dao = new StaffDao();
     $staff = $dao->findById($id);
+    blockModelEmpty($staff);
     $_SESSION['del_staff'] = serialize($staff);
 ?>
 
@@ -33,14 +35,20 @@
     </tr>
   </table>
 
-  <p>削除しますか？</p>
-  <button type="button" onclick="history.back()">戻る</button>
-  <input type="submit" value="削除">
+  <?php if ($staff->getId() == $_SESSION['staff_id']): ?>
+    <p>ログイン中のIDです</p>
+    <button type="button" onclick="history.back()">戻る</button>
+    <?php unset($_SESSION['del_staff']) ?>
+  <?php else: ?>
+    <p>削除しますか？</p>
+    <button type="button" onclick="history.back()">戻る</button>
+    <input type="submit" value="削除">
+  <?php endif ?>
 </form>
 
 <?php
   } catch (PDOException $e) {
-    dbError('admin');
+    dbError();
   }
 ?>
 

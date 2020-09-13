@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
   
   require_once(D_ROOT.'database/StaffDao.php');
 
@@ -8,12 +9,13 @@
   include(D_ROOT.'component/header_admin.php');
 ?>
 <?php
-  $get = sanitize($_GET);
-  $id = $get['id'];
+  reqGet('id');
+  $id = inputGet('id');
 
   try {
     $dao = new StaffDao();
     $staff = $dao->findById($id);
+    blockModelEmpty($staff);
     $param = http_build_query(['id' => $staff->getId()]);
 ?>
 
@@ -38,7 +40,7 @@
 
 <?php
   } catch (PDOException $e) {
-    dbError('admin');
+    dbError();
   }
 ?>
 

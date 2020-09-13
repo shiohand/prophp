@@ -11,58 +11,110 @@ function sessionStart() {
   session_regenerate_id(true);
 }
 // 未ログインを弾く
-function reqLoginAdmin() {
+function reqLogin() {
   session_start();
   session_regenerate_id(true);
-  if (!isset($_SESSION['staff_login'])) {
-    header('Location: '.S_NAME.'admin/no_login.php');
-    exit();
-  }
-}
-function reqLoginShop() {
-  session_start();
-  session_regenerate_id(true);
-  if (!isset($_SESSION['member_login'])) {
-    header('Location: '.S_NAME.'shop/no_login.php');
-    exit();
+  if (BASE === 'admin') {
+    if (!isset($_SESSION['staff_login'])) {
+      header('Location: '.S_NAME.BASE.'/no_login.php');
+      exit();
+    }
+  } elseif (BASE === 'shop') {
+    if (!isset($_SESSION['member_login'])) {
+      header('Location: '.S_NAME.BASE.'/no_login.php');
+      exit();
+    }
   }
 }
 // ログイン済みを弾く
-function blockLoginAdmin() {
+function blockLogin() {
   session_start();
-  if (isset($_SESSION['staff_login'])) {
-    header('Location: '.S_NAME.'admin/already_login.php');
-    exit();
+  if (BASE === 'admin') {
+    if (isset($_SESSION['staff_login'])) {
+      header('Location: '.S_NAME.BASE.'/already_login.php');
+      exit();
+    }
+  } elseif (BASE === 'shop') {
+    if (isset($_SESSION['member_login'])) {
+      header('Location: '.S_NAME.BASE.'/already_login.php');
+      exit();
+    }
   }
 }
-function blockLoginShop() {
-  session_start();
-  if (isset($_SESSION['member_login'])) {
-    header('Location: '.S_NAME.'shop/already_login.php');
-    exit();
+// あるべきリクエストが不足している場合を弾く
+function reqPost() {
+  if (empty($_POST)) {
+    commonError();
   }
 }
-// カートが空を弾く
+function reqGet(string ...$keys) {
+  foreach($keys as $key) {
+    if (!isset($_GET[$key])) {
+      commonError();
+    }
+  }
+}
+function reqSession(string ...$keys) {
+  foreach($keys as $key) {
+    if (!isset($_SESSION[$key])) {
+      commonError();
+    }
+  }
+}
+// あるべきモデルが取得できていない場合を弾く
+function blockModelEmpty($model) {
+  if(!$model->getId()) {
+    commonError();
+  }
+}
+// カートが空を弾く shop
 function blockCartEmpty() {
   if (!isset($_SESSION['cart'])) {
     print 'カートが空です<br>';
-    print '<a href="'.S_NAME.'shop/top.php">トップページへ</a>';
+    print '<a href="'.S_NAME.BASE.'/top.php">トップページへ</a>';
     include(D_ROOT.'component/footer_shop.php');
     exit();
   }
 }
 
+// filter_input(key, 初期値)
+// 弱点。入力値が0だと$initになるかも。
+function inputPost(string $key, string $init = ''): string {
+  $ret = (string)filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+  if ($ret) {
+    return $ret;
+  } else {
+    return $init;
+  }
+}
+function inputGet(string $key, string $init = ''): string {
+  $ret = (string)filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+  if ($ret) {
+    return $ret;
+  } else {
+    return $init;
+  }
+}
+// pageCheck pageCheck(inputGet('p', '1'))で使う
+function pageCheck(string $p) {
+  if ((preg_match("/\A[0-9]+\z/", $p) === 0) || ($p < 1)) {
+    return '1';
+  }
+  return $p;
+}
+
 // エラーメッセージとフッターとexit()
-function commonError($from) {
-  print '<br><a href="'.S_NAME.$from.'/top.php">トップページへ戻る</a>';
-  include(D_ROOT.'component/footer_'.$from.'.php');
+function commonError() {
+  print '<p>エラーが発生しました</p>';
+  print '<br><a href="'.S_NAME.BASE.'/top.php">トップページへ戻る</a>';
+  include(D_ROOT.'component/footer_'.BASE.'.php');
   exit();
 }
-function dbError($from) {
+function dbError() {
   print 'ただいま障害により大変ご迷惑をお掛けしております。';
-  print '<a href="'.S_NAME.$from.'/top.php">トップページへ戻る</a>';
+  print '<a href="'.S_NAME.BASE.'/top.php">トップページへ戻る</a>';
   // print $e->getMessage();
-  include(D_ROOT.'component/footer_'.$from.'.php');
+  include(D_ROOT.'component/footer_'.BASE.'.php');
   exit();
 }
 // 配列にhtmlspecialchars()をかけて戻す
@@ -89,7 +141,7 @@ function outputNavLis(array $items) {
     echo '</li>';
   }
 }
-// member 年代のselectを出力
+// member 年代のselectを出力 1910から10刻み
 function outputBirthOptions($selected = '1980') {
   $now = round(intval(date('Y')), -1);
   for ($i = 1910; $i <= $now; $i += 10) {

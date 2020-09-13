@@ -1,15 +1,31 @@
-動作異常おおまか
-動作正常おおまか
+動作異常おおまか(a-b)
+動作正常おおまか(a-b)
 他確認、追加
 続きや詰め方教わる
 修正
 
 ○修正めも
-isset系のエラーチェックを、
-  if(!(isset(○○) && isset(○○))) { error; }
-  以降通常処理
-に統一(例:cartin.php)
-クエリパラメータのidが不正だったときの対応(対応されているところもある)
+
+$_POST,$_GETはemptyやissetで弾いてからfilter_input
+
+define('BASE', 'shop');
+reqLogin();
+
+  reqPost();
+inputPost();
+  reqGet('');
+inputGet();
+  reqSession('');
+
+blockModelEmpty($);
+
+(string)filter_input(INPUT_POST, 
+, FILTER_SANITIZE_SPECIAL_CHARS);
+
+filter_input(INPUT_GET, 
+, FILTER_SANITIZE_SPECIAL_CHARS);
+
+headerのないエラーは放置。header('Location: 略')使ってるページではヘッダー出すとheader()が動かないから
 
 ○
 shopで会員がdelete_doした場合はログインセッションを削除してトップに戻る

@@ -1,16 +1,19 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
 
   require_once(D_ROOT.'database/OrderDao.php');
-  
+
   $title = '注文管理';
   include(D_ROOT.'component/header_admin.php');
 ?>
 <?php
-  $post = sanitize($_POST);
-  $post_sales_id = $post['sales_id'] ?? '';
-  
+  $post_sales_id = inputPost('sales_id');
+  if ($post_sales_id && !preg_match('/\A\d+\z/', $post_sales_id)) {
+    $post_sales_id = 'error';
+  };
+
   try {
     $dao = new OrderDao();
     $orders = $dao->getForSalesData($post_sales_id);
@@ -87,7 +90,7 @@
 
 <?php
   } catch (PDOException $e) {
-    dbError('admin');
+    dbError();
   }
 ?>
 

@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
   
   require_once(D_ROOT.'database/ProductDao.php');
 
@@ -8,12 +9,11 @@
   include(D_ROOT.'component/header_admin.php');
 ?>
 <?php
-  // sanitize
-  $post = sanitize($_POST);
-  $post_name = $post['name'];
-  $post_price = $post['price'];
-  $post_release_date = $post['release_date'];
-  $post_content = $post['content'];
+  reqPost();
+  $post_name = inputPost('name');
+  $post_price = inputPost('price');
+  $post_release_date = inputPost('release_date');
+  $post_content = inputPost('content');
   $post_pict = $_FILES['pict'];
 
   // エラーチェック
@@ -80,7 +80,7 @@
         $pict_name = 'tmp'.rand(0, 20).$type;
       }
     } catch (PDOException $e) {
-      dbError('admin');
+      dbError();
     }
     // /pict/tmp/ファイル名 で一時保存
     move_uploaded_file($post_pict['tmp_name'],'./pict/tmp/'.$pict_name);

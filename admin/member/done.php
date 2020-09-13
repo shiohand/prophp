@@ -1,17 +1,14 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
 
   $title = '完了';
   include(D_ROOT.'component/header_admin.php');
 ?>
 <?php
-  if (isset($_SESSION['msg'])) {
-    $msg = $_SESSION['msg'];
-  } else {
-    print '<p>エラーが発生しました</p>';
-    commonError('admin');
-  }
+  reqSession('msg');
+  $msg = $_SESSION['msg'];
   unset($_SESSION['msg']);
 ?>
 

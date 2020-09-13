@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
 
   require_once(D_ROOT.'database/dbTool.php');
 
@@ -22,16 +23,13 @@
     'one_product_sales' => '指定商品売上'
   ];
 
-  $post = sanitize($_POST);
-
-  $req = $post['req'];
+  reqPost();
+  // どこからのリクエストかを受け取り、見出しリスト設定
+  $req = inputPost('req');
   $fields = $fields_arr[$req];
-  if (isset($_SESSION[$req.'_sql'])) {
-    $sql = $_SESSION[$req.'_sql'];
-  } else {
-    print '<p>エラーが発生しました</p>';
-    commonError('admin');
-  }
+  
+  reqSession($req.'_sql');
+  $sql = unserialize($_SESSION[$req.'_sql']);
 
   if (file_exists(FILE_NAME)) {
     unlink(FILE_NAME);
@@ -70,7 +68,7 @@
 
 <?php
   } catch (PDOException $e) {
-    dbError('admin');
+    dbError();
   }
 ?>
 

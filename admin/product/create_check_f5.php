@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
   
   require_once(D_ROOT.'database/ProductDao.php');
 
@@ -8,7 +9,6 @@
   include(D_ROOT.'component/header_admin.php');
 ?>
 <?php
-  // sanitize
   $post_name = 'ランダム'.rand(100, 500);
   $post_price = rand(1,200) * 100;
   $post_release_date = date('Y-m-d', strtotime('-'.rand(0, 1000).'day'));

@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
   
   require_once(D_ROOT.'database/Staff.php');
 
@@ -8,11 +9,10 @@
   include(D_ROOT.'component/header_admin.php');
 ?>
 <?php
-  // sanitize
-  $post = sanitize($_POST);
-  $post_name = $post['name'];
-  $post_password = $post['password'];
-  $post_password2 = $post['password2'];
+  reqPost();
+  $post_name = inputPost('name');
+  $post_password = inputPost('password');
+  $post_password2 = inputPost('password2');
 
   // エラーチェック
   $error = array();

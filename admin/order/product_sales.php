@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
 
   require_once(D_ROOT.'database/OrderDao.php');
   require_once(D_ROOT.'common/outputOrders.php');
@@ -9,42 +10,42 @@
   include(D_ROOT.'component/header_admin.php');
 ?>
 <?php
-  $get = sanitize($_GET);
-  $post = sanitize($_POST);
-  if (isset($_POST['submit_clear'])) {
-    unset($post['at_start']);
-    unset($post['at_end']);
-    unset($post['product_ids']);
+  $post_at_start = inputPost('at_start');
+  $post_at_end = inputPost('at_end');
+  $post_product_ids = inputPost('product_ids');
+
+  if (inputPost('submit_clear') === 'クリア') {
+    $post_at_start = '';
+    $post_at_end = '';
+    $post_product_ids = '';
   }
 
   // id
-  $post_product_ids = $post['product_ids'] ?? '';
   if ($post_product_ids && !preg_match('/\A\d+(,\d+)*\z/', $post_product_ids)) {
     $post_product_ids = 'error';
   };
 
   // BETWEEN
-  $get_term = $get['term'] ?? '';
+  $get_term = inputGet('term');
   list($termAs, $betweenAnd) = getTerms($get_term, 'dat_sales_product.created_at');
 
   // BETWEEN
-  $post_at_start = $post['at_start'] ?? '';
-  $post_at_end = $post['at_end'] ?? '';
   $betweenAnd .= makeOptBetween('dat_sales_product.created_at', $post_at_start, $post_at_end);
 
   // ORDER BY
-  $get_sort = $get['sort'] ?? '';
+  $get_sort = inputGet('sort');
   list($sortAs, $orderBy) = getOrderByForPSales($get_sort);
 
   // LIMIT pager
-  $page = $get['p'] ?? '1';
+  $page = pageCheck(inputGet('p', '1'));
   $per_page = 30;
   $offset = ($page - 1) * $per_page;
   try {
     $dao = new OrderDao();
     $count = $dao->getCountForProductSales($post_product_ids, $betweenAnd);
   } catch (PDOException $e) {
-    dbError('admin');
+    echo $e;
+    dbError();
   }
   $pager = createPager($page, $count, $per_page);
 
@@ -136,7 +137,7 @@
 
 <?php
   } catch (PDOException $e) {
-    dbError('admin');
+    dbError();
   }
 ?>
 

@@ -418,7 +418,7 @@ class OrderDao {
 
     ." WHERE 1=1";
     if (!empty($product_ids)) {
-      $sql .= " AND product_id IN ($product_ids)";
+      $sql .= " AND product_id IN ('{$product_ids}')";
     }
     $sql .= ""
     .$betweenAnd
@@ -448,7 +448,7 @@ class OrderDao {
     ." mst_product ON dat_sales_product.product_id = mst_product.id"
     ." WHERE 1=1";
     if (!empty($product_ids)) {
-      $sql .= " AND product_id IN ($product_ids)";
+      $sql .= " AND product_id IN ('{$product_ids}')";
     }
     $sql .= ""
     .$betweenAnd
@@ -474,6 +474,10 @@ class OrderDao {
     //   mst_product
     // 副問合せ
     //   SELECT SUM(price * quantity) AS final_price
+
+    if ($sales_id === 'error') {
+      $sales_id = '';
+    }
 
     $sql = ""
     ."SELECT"

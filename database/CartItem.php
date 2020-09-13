@@ -5,10 +5,12 @@ require_once(D_ROOT.'database/Product.php');
 class CartItem {
   private Product $product;
   private $quantity;
+  private $quantity_error;
 
   public function __construct(Product $product, $quantity) {
     $this->product = $product;
     $this->quantity = $quantity;
+    $this->quantity_error = '';
   }
 
   public function getProduct(): Product {
@@ -22,6 +24,12 @@ class CartItem {
   }
   public function setQuantity($quantity) {
     $this->quantity = $quantity;
+  }
+  public function getQuantityError() {
+    return $this->quantity_error;
+  }
+  public function setQuantityError($quantity_error) {
+    $this->quantity_error = $quantity_error;
   }
   // 重複検索
   public static function findById($items, $product_id) {

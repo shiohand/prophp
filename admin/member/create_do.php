@@ -1,29 +1,25 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'admin');
+  reqLogin();
   
   require_once(D_ROOT.'database/MemberDao.php');
 ?>
 <?php
-  if (isset($_SESSION['new_member'])) {
-    $new_member = unserialize($_SESSION['new_member']);
-  } else {
-    print '<p>エラーが発生しました</p>';
-    commonError('admin');
-  }
+  reqSession('new_member');
+  $new_member = unserialize($_SESSION['new_member']);
+  unset($_SESSION['new_member']);
 
   try {
     $dao = new MemberDao();
-    $member = $dao->create($new_member);
+    $dao->create($new_member);
     
     $_SESSION['msg'] = '会員メールアドレス:'.$new_member->getEmail().' を追加しました';
-    
-    unset($_SESSION['new_member']);
     
     header('Location: done.php');
     exit();
 
   } catch (PDOException $e) {
-    dbError('admin');
+    dbError();
   }
 ?>
