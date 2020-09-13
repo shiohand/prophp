@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginShop();
+  define('BASE', 'shop');
+  reqLogin();
 
   require_once(D_ROOT.'database/OrderDao.php');
   require_once(D_ROOT.'common/outputOrders.php');
@@ -11,15 +12,12 @@
 <?php
   $member_id = $_SESSION['member_id'];
 
-  // クエリ処理
-  $get = sanitize($_GET);
-
   // BETWEEN
-  $get_term = $get['term'] ?? '';
+  $get_term = inputGet('term');
   list($termAs, $betweenAnd) = getTerms($get_term, 'dat_sales.created_at');
 
   // LIMIT pager
-  $page = $get['p'] ?? '1';
+  $page = pageCheck(inputGet('p', '1'));
   $per_page = 5;
   $offset = ($page - 1) * $per_page;
   try {
@@ -27,7 +25,7 @@
     // countはsales_id単位
     $count = $dao->getCountForOrdered($member_id, $betweenAnd);
   } catch (PDOException $e) {
-    dbError('shop');
+    dbError();
   }
   $pager = createPager($page, $count, $per_page);
 
@@ -103,7 +101,7 @@
 
 <?php
   } catch (PDOException $e) {
-    dbError('shop');
+    dbError();
   }
 ?>
 

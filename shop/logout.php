@@ -1,6 +1,8 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
+  define('BASE', 'shop');
   session_start();
+
   $_SESSION = array(); // 空の配列を代入
   if (isset($_COOKIE[session_name()]) == true) {
     setcookie(session_name(), '', time()-42000, '/');

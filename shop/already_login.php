@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginAdmin();
+  define('BASE', 'shop');
+  reqLogin();
   
   $title = 'ログイン済';
   include(D_ROOT.'component/header_shop.php');

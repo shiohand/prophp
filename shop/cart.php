@@ -1,5 +1,6 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
+  define('BASE', 'shop');
   sessionStart();
 
   require_once(D_ROOT.'database/CartItem.php');
@@ -14,32 +15,25 @@
     $cart = unserialize($_SESSION['cart']);
   }
   // 数量変更・削除
-  if (isset($_POST)) {
-    $post = sanitize($_POST);
-    // エラーチェック
-    $error = array();
-    $submit_check = true;
+  if (!empty($_POST)) {
     // 削除後の添字ずれを避けるために末尾から処理
     $len = count($cart);
     for ($i = $len - 1; $i >= 0; $i--) { 
-      // 数量変更
-      if (isset($post['quantity'.$i])) {
-        // postされた値
-        $q = $post['quantity'.$i];
-        if ((preg_match("/\A[0-9]+\z/", $q) === 0 || $q < 1)) {
-          $error['quantity'.$i] = '<br><span class="danger">変更に失敗しました</span>';
-          // エラー時は元の値
-          $q = $cart[$i]->getQuantity();
-        }
+      // 数量変更 postされた値
+      $q = inputPost('quantity'.$i);
+      if ((preg_match("/\A[0-9]+\z/", $q) === 0 || $q < 1)) {
+        $cart[$i]->setQuantityError('<br><span class="danger">変更に失敗しました</span>');
+      } else {
         // quantityに代入
         $cart[$i]->setQuantity($q);
+        $cart[$i]->setQuantityError('');
       }
       // 削除
       if (isset($_POST['delete'.$i])) {
         array_splice($cart, $i, 1);
       }
     }
-  $_SESSION['cart'] = serialize($cart);
+    $_SESSION['cart'] = serialize($cart);
   }
   // ただの集計用
   $total = ['price' => 0, 'quantity' => 0];
@@ -59,6 +53,7 @@
           $index = array_search($item, $cart);
           $price = $product->getPrice();
           $quantity = $item->getQuantity();
+          $quantity_error = $item->getQuantityError();
           
           $total['quantity'] += $quantity;
           $total['price'] += $price * $quantity;
@@ -81,7 +76,7 @@
           <!-- 数量 -->
           <td>
             数量: <input id="quantity" type="number" name="quantity<?php echo $index ?>" value="<?php echo $quantity ?>" min="1">個
-            <?php if (isset($error['quantity'.$index])) echo $error['quantity'.$index] ?>
+            <?php if ($quantity_error) echo $quantity_error ?>
           </td>
           <!-- 小計 -->
           <td>

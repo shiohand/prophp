@@ -1,23 +1,26 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
+  define('BASE', 'shop');
   sessionStart();
 
   require_once(D_ROOT.'database/ProductDao.php');
   require_once(D_ROOT.'database/ReviewDao.php');
-  
+
   $title = '商品詳細';
   include(D_ROOT.'component/header_shop.php');
 ?>
 <?php
-  $get = sanitize($_GET);
-  $product_id = $get['id'];
   if (isset($_SESSION['member_login'])) {
     $member_id = $_SESSION['member_id'];
   }
 
+  reqGet('id');
+  $product_id = inputGet('id');
+
   try {
     $p_dao = new ProductDao();
     $product = $p_dao->findById($product_id);
+    blockModelEmpty($product);
     $r_dao = new ReviewDao();
     $reviews = $r_dao->findByProductId($product->getId());
 ?>
@@ -130,7 +133,7 @@
 
 <?php
   } catch (PDOException $e) {
-    dbError('shop');
+    dbError();
   }
 ?>
 

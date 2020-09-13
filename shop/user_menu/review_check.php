@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginShop();
+  define('BASE', 'shop');
+  reqLogin();
 
   require_once(D_ROOT.'database/ProductDao.php');
   require_once(D_ROOT.'database/ReviewDao.php');
@@ -13,28 +14,22 @@
     $p_dao = new ProductDao();
     $r_dao = new ReviewDao();
 
-    $post = sanitize($_POST);
-    $post_product_id = $post['target'];
-    $post_rating = $post['rating'];
-    $post_body = $post['review_post'];
+    $member_id = $_SESSION['member_id'];
+
+    reqPost();
+    $post_product_id = inputPost('target');
+    $post_rating = inputPost('rating');
+    $post_body = inputPost('review_post');
 
     $product = $p_dao->findById($post_product_id);
+    blockModelEmpty($product);
     $product_name = $product->getName();
     $param = http_build_query(['id' => $product->getId()]);
 
     // 商品の存在チェック
-    if ($post_product_id !== $product->getId()) {
-      print '商品が見つかりません';
-      commonError('shop');
-    }
-
     // レビューの存在チェック
-    $member_id = $_SESSION['member_id'];
-
-    if ($r_dao->isAlreadyExists($post_product_id, $member_id)) {
-      print '<p>既にレビューしています</p>';
-      print '<a href="'.S_NAME.'shop/view.php?'.$param.'">商品ページへ</a> ';
-      commonError('shop');
+    if ($post_product_id !== $product->getId() && $r_dao->isAlreadyExists($post_product_id, $member_id)) {
+      commonError();
     }
 
     // エラーチェック
@@ -89,7 +84,7 @@
 
 <?php
   } catch (PDOException $e) {
-    dbError('shop');
+    dbError();
   }
 ?>
 

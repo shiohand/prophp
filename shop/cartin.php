@@ -1,5 +1,6 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
+  define('BASE', 'shop');
   sessionStart();
   
   require_once(D_ROOT.'database/ProductDao.php');
@@ -10,45 +11,41 @@
 ?>
 <?php
   try {
+    reqPost();
+    $post_product_id = inputPost('target');
+    $post_quantity = inputPost('quantity');
+
     $dao = new ProductDao();
-    // sanitize
-    $post = sanitize($_POST);
-    if (!isset($post['target']) || !isset($post['quantity'])) {
-      print '<p>エラーが発生しました</p>';
-      commonError('shop');
-    }
-
-    $post_product_id = $post['target'];
-    $post_quantity = $post['quantity'];
-
     $product = $dao->findById($post_product_id);
+    blockModelEmpty($product);
     $recommends = $dao->findRecommend($post_product_id);
     $param = http_build_query(['id' => $post_product_id]);
 
     // 商品の存在チェック、未発売チェック
-    if (($post_product_id !== $product->getId()) || (time() < strtotime($product->getReleaseDate()))) {
-      print '商品が見つかりません<br>';
-      commonError('shop');
+    if (time() < strtotime($product->getReleaseDate())) {
+      commonError();
     }
     // 数量確認
     if ((preg_match("/\A[0-9]+\z/", $post_quantity) === 0 || $post_quantity < 1)) {
       print '数量が不正です<br>';
-      print '<a href="'.S_NAME.'shop/product.php">商品一覧へ戻る</a>';
-      print '<br>';
+      print '<a href="'.S_NAME.'shop/product.php">商品一覧へ戻る</a><br>';
       print '<a href="'.S_NAME.'shop/view.php?'.$param.'">商品ページへ戻る</a>';
-      commonError('shop');
+      print '<br><a href="'.S_NAME.$from.'/top.php">トップページへ戻る</a>';
+      include(D_ROOT.'component/footer_'.$from.'.php');
+      exit();
     }
-    
+
     $cart = array();
     if (isset($_SESSION['cart'])) {
       $cart = unserialize($_SESSION['cart']);
       // カート内のチェック
       if (CartItem::findById($cart, $post_product_id)) {
         print 'その商品はすでにカートに入っています。<br>';
-        print '<a href="'.S_NAME.'shop/product.php">商品一覧へ戻る</a>';
-        print '<br>';
+        print '<a href="'.S_NAME.'shop/product.php">商品一覧へ戻る</a><br>';
         print '<a href="'.S_NAME.'shop/view.php?'.$param.'">商品ページへ戻る</a>';
-        commonError('shop');
+        print '<br><a href="'.S_NAME.$from.'/top.php">トップページへ戻る</a>';
+        include(D_ROOT.'component/footer_'.$from.'.php');
+        exit();
       }
     }
     // CartItem作成、追加
@@ -112,7 +109,7 @@
 
 <?php
   } catch (PDOException $e) {
-    dbError('shop');
+    dbError();
   }
 ?>
 

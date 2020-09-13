@@ -1,5 +1,6 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
+  define('BASE', 'shop');
   sessionStart();
 
   require_once(D_ROOT.'database/ProductDao.php');
@@ -9,21 +10,19 @@
   include(D_ROOT.'component/header_shop.php');
 ?>
 <?php
-  $get = sanitize($_GET);
-  
   // ORDER BY
-  $get_sort = $get['sort'] ?? '';
+  $get_sort = inputGet('sort');
   list($sortAs, $orderBy) = getOrderByForProduct($get_sort);
 
   // LIMIT pager
-  $page = $get['p'] ?? '1';
+  $page = pageCheck(inputGet('p', '1'));
   $per_page = 20;
   $offset = ($page - 1) * $per_page;
   try {
     $dao = new ProductDao();
     $count = $dao->getCountAllWithRating();
   } catch (PDOException $e) {
-    dbError('shop');
+    dbError();
   }
   $pager = createPager($page, $count, $per_page);
 
@@ -76,7 +75,7 @@
 
 <?php
   } catch (PDOException $e) {
-    dbError('shop');
+    dbError();
   }
 ?>
 

@@ -1,5 +1,6 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
+  define('BASE', 'shop');
   sessionStart();
   
   require_once(D_ROOT.'database/Member.php');
@@ -7,32 +8,26 @@
   require_once(D_ROOT.'database/CartItem.php');
 ?>
 <?php
-  if (isset($_SESSION['orderer'])) {
+  if (isset($_SESSION['orderer'], $_SESSION['cart'])) {
     $orderer = unserialize($_SESSION['orderer']);
+    $cart = unserialize($_SESSION['cart']);
   } else {
-    print '<p>エラーが発生しました</p>';
-    commonError('shop');
-  }
-  if (!isset($_SESSION['cart'])) {
     unset($_SESSION['orderer']);
-    print '<p>エラーが発生しました</p>';
-    commonError('shop');
+    commonError();
   }
 
-  $cart = unserialize($_SESSION['cart']);
   $total = ['price' => 0, 'quantity' => 0];
 
-  $post = sanitize($_POST);
-  $post_with_signup = $post['with_signup'];
-  
+  reqPost();
+  $post_with_signup = inputPost('with_signup');
+
   // with_signup 動くかわからん
   if ($post_with_signup === 'signup') {
     $signup = true;
     // guest用の入力がsignupとして送られていないか
     if (!$orderer->getPassword()) {
       unset($_SESSION['orderer']);
-      print '<p>エラーが発生しました</p>';
-      commonError('shop');
+      commonError();
     }
   } else {
     $signup = false;
@@ -42,8 +37,7 @@
     // ログイン中のIDと一致しない注文はエラー
     if ($orderer->getID() !== $_SESSION['member_id']) {
       unset($_SESSION['orderer']);
-      print '<p>エラーが発生しました</p>';
-      commonError('shop');
+      commonError();
     }
   }
 
@@ -52,7 +46,7 @@
     $dao->orderResistation($orderer, $cart, $signup);
     unset($_SESSION['cart']);
   } catch (PDOException $e) {
-    dbError('shop');
+    dbError();
   }
 ?>
 <?php

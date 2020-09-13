@@ -1,5 +1,6 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
+  define('BASE', 'shop');
   sessionStart();
 
   require_once(D_ROOT.'database/MemberDao.php');
@@ -11,28 +12,28 @@
   blockCartEmpty();
 ?>
 <?php
-  // sanitize
-  $post = sanitize($_POST);
-  $post_email = $post['email'];
-  $post_name = $post['name'];
-  $post_postal1 = $post['postal1'];
-  $post_postal2 = $post['postal2'];
-  $post_address = $post['address'];
-  $post_tel = $post['tel'];
-  $post_with_signup = $post['with_signup'];
-  $post_password = $post['password'] ?? '';
-  $post_password2 = $post['password2'] ?? '';
-  $post_gender = $post['gender'];
-  $post_birth = $post['birth'];
+  reqPost();
+  $post_email = inputPost('email');
+  $post_name = inputPost('name');
+  $post_postal1 = inputPost('postal1');
+  $post_postal2 = inputPost('postal2');
+  $post_address = inputPost('address');
+  $post_tel = inputPost('tel');
+  $post_with_signup = inputPost('with_signup');
 
   // with_signup
+  // signup → ラジオボタンはdisabled,checked ポストされたデータをインプット
+  // signup → ラジオボタンはchecked,disabled 空のデータをインプット
   if ($post_with_signup === 'signup') {
     $signup = true;
     $signup_radio = ['disabled', 'checked'];
+    $post_password = inputPost('password');
+    $post_password2 = inputPost('password2');
+    $post_gender = inputPost('gender');
+    $post_birth = inputPost('birth');
   } else {
     $signup = false;
     $signup_radio = ['checked', 'disabled'];
-    // 一応削除
     $post_password = '';
     $post_password2 = '';
     $post_gender = '';
@@ -63,7 +64,7 @@
           $submit_check = false;
         }
       } catch (PDOException $e) {
-        dbError('shop');
+        dbError();
       }
     }
   }
@@ -113,7 +114,13 @@
       $submit_check = false;
     }
     // 性別
+    if ($post_gender !== '1' && $post_gender !== '0') {
+      commonError();
+    }
     // 年代
+    if ($post_birth % 10 !== 0 || $post_birth < 1910 || round(intval(date('Y')), -1) < $post_birth) {
+      commonError();
+    }
   }
 ?>
 

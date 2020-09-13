@@ -1,14 +1,15 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  blockLoginShop();
+  define('BASE', 'shop');
+  blockLogin();
 
   require_once(D_ROOT.'database/MemberDao.php');
 
   try {
-    $post = sanitize($_POST);
-    $post_email = $post['email'];
-    $post_password = $post['password'];
-    
+    reqPost();
+    $post_email = inputPost('email');
+    $post_password = inputPost('password');
+
     $dao = new MemberDao();
     $member = $dao->loginCheck($post_email, md5($post_password));
 
@@ -20,7 +21,7 @@
       exit();
     }
   } catch (PDOException $e) {
-    dbError('shop');
+    dbError();
   }
 ?>
 <?php

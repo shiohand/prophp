@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  blockLoginShop();
+  define('BASE', 'shop');
+  blockLogin();
   
   $title = '会員登録';
   include(D_ROOT.'component/header_shop.php');

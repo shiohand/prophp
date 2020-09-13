@@ -1,7 +1,8 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  reqLoginShop();
-  
+  define('BASE', 'shop');
+  reqLogin();
+
   require_once(D_ROOT.'database/MemberDao.php');
   require_once(D_ROOT.'database/CartItem.php');
 
@@ -16,6 +17,7 @@
   try {
     $dao = new MemberDao();
     $orderer = $dao->findById($member_id);
+    blockModelEmpty($orderer);
 ?>
 
 <h1>かんたん注文確認</h1>
@@ -113,7 +115,7 @@
 
 <?php
   } catch (PDOException $e) {
-    dbError('shop');
+    dbError();
   }
 ?>
 

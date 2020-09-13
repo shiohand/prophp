@@ -1,6 +1,7 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
-  blockLoginShop();
+  define('BASE', 'shop');
+  blockLogin();
 
   require_once(D_ROOT.'database/MemberDao.php');
   

@@ -1,5 +1,6 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
+  define('BASE', 'shop');
   sessionStart();
 
   require_once(D_ROOT.'database/ProductDao.php');
@@ -9,10 +10,8 @@
   include(D_ROOT.'component/header_shop.php');
 ?>
 <?php
-  $get = sanitize($_GET);
-
   // BETWEEN
-  $get_term = $get['term'] ?? '';
+  $get_term = inputGet('term');
   list($termAs, $betweenAnd) = getTerms($get_term, 'dat_sales_product.created_at');
 
   try {
@@ -66,7 +65,7 @@
 
 <?php
   } catch (PDOException $e) {
-    dbError('shop');
+    dbError();
   }
 ?>
 

@@ -1,5 +1,6 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
+  define('BASE', 'shop');
   sessionStart();
 
   require_once(D_ROOT.'database/MemberDao.php');
@@ -59,7 +60,7 @@
           $submit_check = false;
         }
       } catch (PDOException $e) {
-        dbError('shop');
+        dbError();
       }
     }
   }

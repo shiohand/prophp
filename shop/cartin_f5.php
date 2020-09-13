@@ -1,5 +1,6 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
+  define('BASE', 'shop');
   sessionStart();
   
   require_once(D_ROOT.'database/ProductDao.php');
@@ -11,17 +12,18 @@
 <?php
   try {
     $dao = new ProductDao();
-    // sanitize
-    $post_product_id = strval(rand(1, 3) > 1 ? rand(1, 9) : rand(10, 50));
+
+    $post_product_id = strval(rand(1, 3) > 1 ? rand(1, 4) : rand(8, 71));
     $post_quantity = rand(1, 3);
     
     $product = $dao->findById($post_product_id);
+    blockModelEmpty($product);
     $param = http_build_query(['id' => $post_product_id]);
     
     // 商品の存在チェック、未発売チェック
     if (($post_product_id !== $product->getId()) || (time() < strtotime($product->getReleaseDate()))) {
       print '商品が見つかりません<br>';
-      commonError('shop');
+      commonError();
     }
     // 数量確認
     if ((preg_match("/\A[0-9]+\z/", $post_quantity) === 0 || $post_quantity < 1)) {
@@ -29,7 +31,7 @@
       print '<a href="'.S_NAME.'shop/product.php">商品一覧へ戻る</a>';
       print '<br>';
       print '<a href="'.S_NAME.'shop/view.php?'.$param.'">商品ページへ戻る</a>';
-      commonError('shop');
+      commonError();
     }
     
     $cart = array();
@@ -41,7 +43,7 @@
         print '<a href="'.S_NAME.'shop/product.php">商品一覧へ戻る</a>';
         print '<br>';
         print '<a href="'.S_NAME.'shop/view.php?'.$param.'">商品ページへ戻る</a>';
-        commonError('shop');
+        commonError();
       }
     }
     // CartItem作成、追加
@@ -69,7 +71,7 @@
 
 <?php
   } catch (PDOException $e) {
-    dbError('shop');
+    dbError();
   }
 ?>
 

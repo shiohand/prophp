@@ -1,17 +1,14 @@
 <?php
   require_once($_SERVER['DOCUMENT_ROOT'].'/prophp/common/common.php');
+  define('BASE', 'shop');
   sessionStart();
   
   $title = '注文完了';
   include(D_ROOT.'component/header_shop.php');
 ?>
 <?php
-  if (isset($_SESSION['msg'])) {
-    list($msg, $body) = $_SESSION['msg'];
-  } else {
-    print '<p>エラーが発生しました</p>';
-    commonError('shop');
-  }
+  reqSession('msg');
+  $msg = $_SESSION['msg'];
   unset($_SESSION['msg']);
 ?>
 
