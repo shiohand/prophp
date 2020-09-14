@@ -12,8 +12,8 @@
 <?php
   $post_member_id = inputPost('member_id');
   $post_product_id = inputPost('product_id');
-  $post_at_start = inputPost('at_start');
-  $post_at_end = inputPost('at_end');
+  $post_at_start = dateCheck(inputPost('at_start'));
+  $post_at_end = dateCheck(inputPost('at_end'));
 
   if (inputPost('submit_clear') === 'クリア') {
     $post_member_id = '';

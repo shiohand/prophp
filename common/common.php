@@ -95,8 +95,19 @@ function inputGet(string $key, string $init = ''): string {
     return $init;
   }
 }
+// dateCheck type="date"のフォーマット確認 yyyy-mm-dd
+function dateCheck(string $date): string{
+  if (preg_match("/\A[0-9]{4}(-[0-9]{2}){2}\z/", $date) === 0) {
+    return '';
+  }
+  list($y, $m, $d) = explode('-', $date);
+  if (!checkdate($m, $d, $y)) {
+    return '';
+  }
+  return $date;
+}
 // pageCheck pageCheck(inputGet('p', '1'))で使う
-function pageCheck(string $p) {
+function pageCheck(string $p): string {
   if ((preg_match("/\A[0-9]+\z/", $p) === 0) || ($p < 1)) {
     return '1';
   }

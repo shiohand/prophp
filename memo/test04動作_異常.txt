@@ -5,6 +5,8 @@
 
   login 無し
   login_check
+    a postパラメータが無い
+    -b commonError()
     a ログイン失敗
     -b スタッフIDまたはパスワードが違います
   logout 無し
@@ -18,47 +20,59 @@
 
     view
       a getパラメータが無い。値に一致するデータが存在しない
-      -b 未定
+      -b commonError()
 
     create 無し
 
     create_check
-      a postパラメータが無い。
-      -b 未定
-      a なんらかのエラーがある
+      a postパラメータが無い
+      -b commonError()
+      a なんらかの入力エラーがある
       -b 戻るボタンの後ろに追加ボタンが無い
 
     create_do
+      a あるべきsessionのキーが無い
+      -b commonError()
       a create_checkを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
     edit
       a getパラメータが無い。値に一致するデータが存在しない
-      -b 未定
+      -b commonError()
 
     edit_check
+      a postパラメータが無い
+      -b commonError()
+      a あるべきsessionのキーが無い
+      -b commonError()
       a editを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
-      a postパラメータが無い。
+      -b commonError()
+      a postパラメータが無い
       -b 未定
-      a なんらかのエラーがある
+      a なんらかの入力エラーがある
       -b 戻るボタンの後ろに確定ボタンが無い
 
     edit_do
+      a あるべきsessionのキーが無い
+      -b commonError()
       a edit_checkを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
     delete
       a getパラメータが無い。値に一致するデータが存在しない
-      -b 未定
+      -b commonError()
 
     delete_do
+      a あるべきsessionのキーが無い
+      -b commonError()
       a deleteを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
     done
+      a あるべきsessionのキーが無い
+      -b commonError()
       a create_do,edit_do,delete_doのいずれかからのアクセスでない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
   /product/
 
@@ -66,47 +80,57 @@
 
     view
       a getパラメータが無い。値に一致するデータが存在しない
-      -b 未定
+      -b commonError()
 
     create 無し
 
     create_check
-      a postパラメータが無い。
-      -b 未定
-      a なんらかのエラーがある
+      a postパラメータが無い
+      -b commonError()
+      a なんらかの入力エラーがある
       -b 戻るボタンの後ろに追加ボタンが無い
 
     create_do
+      a あるべきsessionのキーが無い
+      -b commonError()
       a create_checkを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
     edit
       a getパラメータが無い。値に一致するデータが存在しない
-      -b 未定
+      -b commonError()
 
     edit_check
+      a postパラメータが無い
+      -b commonError()
+      a あるべきsessionのキーが無い
+      -b commonError()
       a editを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
-      a postパラメータが無い。
-      -b 未定
-      a なんらかのエラーがある
+      -b commonError()
+      a なんらかの入力エラーがある
       -b 戻るボタンの後ろに確定ボタンが無い
 
     edit_do
+      a あるべきsessionのキーが無い
+      -b commonError()
       a edit_checkを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
     delete
       a getパラメータが無い。値に一致するデータが存在しない
-      -b 未定
+      -b commonError()
 
     delete_do
+      a あるべきsessionのキーが無い
+      -b commonError()
       a deleteを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
     done
+      a あるべきsessionのキーが無い
+      -b commonError()
       a create_do,edit_do,delete_doのいずれかからのアクセスでない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
   /member/
 
@@ -114,47 +138,57 @@
 
     view
       a getパラメータが無い。値に一致するデータが存在しない
-      -b 未定
+      -b commonError()
 
     create 無し
 
     create_check
-      a postパラメータが無い。
-      -b 未定
-      a なんらかのエラーがある
+      a postパラメータが無い
+      -b commonError()
+      a なんらかの入力エラーがある
       -b 戻るボタンの後ろに追加ボタンが無い
 
     create_do
+      a あるべきsessionのキーが無い
+      -b commonError()
       a create_checkを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
     edit
       a getパラメータが無い。値に一致するデータが存在しない
-      -b 未定
+      -b commonError()
 
     edit_check
+      a postパラメータが無い
+      -b commonError()
+      a あるべきsessionのキーが無い
+      -b commonError()
       a editを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
-      a postパラメータが無い。
-      -b 未定
-      a なんらかのエラーがある
+      -b commonError()
+      a なんらかの入力エラーがある
       -b 戻るボタンの後ろに確定ボタンが無い
 
     edit_do
+      a あるべきsessionのキーが無い
+      -b commonError()
       a edit_checkを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
     delete
       a getパラメータが無い。値に一致するデータが存在しない
-      -b 未定
+      -b commonError()
 
     delete_do
+      a あるべきsessionのキーが無い
+      -b commonError()
       a deleteを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
     done
+      a あるべきsessionのキーが無い
+      -b commonError()
       a create_do,edit_do,delete_doのいずれかからのアクセスでない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
   /order/
 
@@ -163,6 +197,8 @@
     sales_data
       a 送信された注文IDが存在しない
       -b データがありませんと表示される
+      a ID指定のフォームから送信された入力値が不正
+      -b 結果が0件のときと同じで何も表示されず、更新後のフォームにはerrorの文字が入っている
 
     order
       a 集計期間を指定する$_GET['term']の値が不正
@@ -172,11 +208,13 @@
       a 現在ページを指定する$_GET['p']の値が自然数[/\A\d+\z/]でない
       -b 現在ページは1として処理する
       a 現在ページを指定する$_GET['p']の値が表示中のデータの総ページ数より大きい
-      -b 表示されるデータはない。ページャーは最終ページを選択している状態と同じページが表示されているが、最終ページもリンクになっていることは正常時と異なる。
+      -b 表示されるデータはない。ページャーは最終ページを選択している状態と同じページが表示されているが、最終ページもリンクになっていることは正常時と異なる
       a 送信された会員IDが存在しない
       -b 結果が0件のときと同じで何も表示されない
       a 送信された商品IDが存在しない
       -b 結果が0件のときと同じで何も表示されない
+      a ID指定のフォームから送信された入力値が不正
+      -b 結果が0件のときと同じで何も表示されず、更新後のフォームにはerrorの文字が入っている
 
     sales
       a 集計期間を指定する$_GET['interv']の値が不正
@@ -186,7 +224,7 @@
       a 現在ページを指定する$_GET['p']の値が自然数[/\A\d+\z/]でない
       -b 現在ページは1として処理する
       a 現在ページを指定する$_GET['p']の値が表示中のデータの総ページ数より大きい
-      -b 表示されるデータはない。ページャーは最終ページを選択している状態と同じページが表示されているが、最終ページもリンクになっていることは正常時と異なる。
+      -b 表示されるデータはない。ページャーは最終ページを選択している状態と同じページが表示されているが、最終ページもリンクになっていることは正常時と異なる
 
     product_sales
       a 集計期間を指定する$_GET['term']の値が不正
@@ -196,9 +234,11 @@
       a 現在ページを指定する$_GET['p']の値が自然数[/\A\d+\z/]でない
       -b 現在ページは1として処理する
       a 現在ページを指定する$_GET['p']の値が表示中のデータの総ページ数より大きい
-      -b 表示されるデータはない。ページャーは最終ページを選択している状態と同じページが表示されているが、最終ページもリンクになっていることは正常時と異なる。
+      -b 表示されるデータはない。ページャーは最終ページを選択している状態と同じページが表示されているが、最終ページもリンクになっていることは正常時と異なる
       a 送信された商品IDが存在しない
       -b 結果が0件のときと同じで何も表示されない
+      a ID指定のフォームから送信された入力値が不正
+      -b 結果が0件のときと同じで何も表示されず、更新後のフォームにはerrorの文字が入っている
 
     one_product_sales
       a 集計期間を指定する$_GET['interv']の値が不正
@@ -208,13 +248,19 @@
       a 現在ページを指定する$_GET['p']の値が自然数[/\A\d+\z/]でない
       -b 現在ページは1として処理する
       a 現在ページを指定する$_GET['p']の値が表示中のデータの総ページ数より大きい
-      -b 表示されるデータはない。ページャーは最終ページを選択している状態と同じページが表示されているが、最終ページもリンクになっていることは正常時と異なる。
+      -b 表示されるデータはない。ページャーは最終ページを選択している状態と同じページが表示されているが、最終ページもリンクになっていることは正常時と異なる
       a 送信された商品IDが存在しない
       -b 結果が0件のときと同じで何も表示されない
+      a ID指定のフォームから送信された入力値が不正
+      -b 結果が0件のときと同じで何も表示されず、更新後のフォームにはerrorの文字が入っている
 
     download_csv
+      a postパラメータが無い
+      -b commonError()
+      a あるべきsessionのキーが無い
+      -b commonError()
       a order,sales,product_sales,one_product_salesのいずれかのボタンからのアクセスでない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
 /shop/
 
@@ -246,15 +292,17 @@
     a 現在ページを指定する$_GET['p']の値が自然数[/\A\d+\z/]でない
     -b 現在ページは1として処理する
     a 現在ページを指定する$_GET['p']の値が表示中のデータの総ページ数より大きい
-    -b 表示されるデータはない。ページャーは最終ページを選択している状態と同じページが表示されているが、最終ページもリンクになっていることは正常時と異なる。
+    -b 表示されるデータはない。ページャーは最終ページを選択している状態と同じページが表示されているが、最終ページもリンクになっていることは正常時と異なる
 
   view
     a getパラメータが無い。値に一致するデータが存在しない
-    -b 未定
+    -b commonError()
 
   cartin
+    a postパラメータが無い
+    -b commonError()
     a shop/view.php,cartin.phpのいずれかのボタンからのアクセスでない
-    -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+    -b commonError()
     a ポストされた商品IDが存在しない
     -b 商品が見つかりませんと表示される
     a ポストされた数量が不正
@@ -278,81 +326,99 @@
       a 現在ページを指定する$_GET['p']の値が自然数[/\A\d+\z/]でない
       -b 現在ページは1として処理する
       a 現在ページを指定する$_GET['p']の値が表示中のデータの総ページ数より大きい
-      -b 表示されるデータはない。ページャーは最終ページを選択している状態と同じページが表示されているが、最終ページもリンクになっていることは正常時と異なる。
+      -b 表示されるデータはない。ページャーは最終ページを選択している状態と同じページが表示されているが、最終ページもリンクになっていることは正常時と異なる
 
     reviewed 無し
 
     review_check
-      a postパラメータが無い。
-      -b 未定
+      a postパラメータが無い
+      -b commonError()
       a ポストされた商品IDが存在しない
       -b 商品が見つかりませんと表示される
       a ポストされた商品ID,ポストした会員IDのレビューが既に存在する
       -b 既にレビューしていますのメッセージと商品ページへリンクが表示される
-      a なんらかのエラーがある
+      a なんらかの入力エラーがある
       -b 戻るボタンの後ろに投稿ボタンが無い
 
     review_do
+      a あるべきsessionのキーが無い
+      -b commonError()
       a review_checkを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
     signup 無し
 
     sigunup_check
-      a postパラメータが無い。
-      -b 未定
-      a なんらかのエラーがある
+      a postパラメータが無い
+      -b commonError()
+      a なんらかの入力エラーがある
       -b 戻るボタンの後ろに追加ボタンが無い
 
     signup_do
+      a あるべきsessionのキーが無い
+      -b commonError()
       a signup_checkを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
     edit 無し
 
     edit_check
+      a postパラメータが無い
+      -b commonError()
+      a あるべきsessionのキーが無い
+      -b commonError()
       a editを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
-      a postパラメータが無い。
-      -b 未定
-      a なんらかのエラーがある
+      -b commonError()
+      a なんらかの入力エラーがある
       -b 戻るボタンの後ろに確定ボタンが無い
 
     edit_do
+      a あるべきsessionのキーが無い
+      -b commonError()
       a edit_checkを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
     delete 無し
 
     delete_do
+      a あるべきsessionのキーが無い
+      -b commonError()
       a deleteを通っていない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
     done
+      a あるべきsessionのキーが無い
+      -b commonError()
       a create_do,edit_do,delete_do,review_doのいずれかからのアクセスでない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
   /order/
 
     order 無し
 
     order_check
-      a postパラメータが無い。
-      -b 未定
-      a なんらかのエラーがある
+      a postパラメータが無い
+      -b commonError()
+      a なんらかの入力エラーがある
       -b 戻るボタンの後ろに注文を確定するボタンが無い
 
     order_member
 
     order_do
+      a postパラメータが無い
+      -b commonError()
+      a あるべきsessionのキーが無い
+      -b commonError()
       a かんたん注文の場合、ログイン中のmember_idとポストされたmember_idが一致しない場合
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
       a order_check,order_memberのいずれかからのアクセスでない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
     order_done
+      a あるべきsessionのキーが無い
+      -b commonError()
       a order_doからのアクセスでない
-      -b エラーが発生しましたのメッセージとトップページへのリンクが表示される
+      -b commonError()
 
 /component/
 
